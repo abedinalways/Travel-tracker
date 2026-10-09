@@ -10,7 +10,7 @@ import { BackupRestoreModal } from "@/components/settings/BackupRestoreModal";
 import { useTripStorage } from "@/hooks/useTripStorage";
 import { DistrictGeoData, CountryGeoData } from "@/types/map";
 import { useLanguage } from "@/i18n/LanguageContext";
-import { Heart, Compass, Sparkles } from "lucide-react";
+import { Heart, Sparkles } from "lucide-react";
 
 export default function HomePage() {
   const { t } = useLanguage();
@@ -92,11 +92,14 @@ export default function HomePage() {
       <footer className="w-full border-t border-zinc-800/80 py-6 mt-12 bg-zinc-950/60 text-xs text-zinc-500 text-center">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2 font-mono">
-            <Compass className="w-4 h-4 text-emerald-500" />
-            <span className="text-zinc-400 font-semibold">
+            <span className="text-zinc-200 font-bold">
+              DropTrip
+            </span>
+            <span className="text-zinc-500">•</span>
+            <span className="text-emerald-400 font-semibold">
               CancelTour & Beyond 🇧🇩
             </span>
-            <span>— Local-First Travel & Drop Tracker</span>
+            <span className="text-zinc-500">— Local-First Luxury Flake Tracker</span>
           </div>
           <div className="flex items-center gap-1 text-zinc-400">
             <span>Made with</span>
