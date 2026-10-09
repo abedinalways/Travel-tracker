@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 import { BANGLADESH_DISTRICTS } from "@/config/bangladeshDistricts";
 import { DistrictGeoData } from "@/types/map";
 import { TravelMemory, TripStatus } from "@/types/trip";
@@ -15,6 +15,94 @@ interface MapBangladeshProps {
   className?: string;
 }
 
+const DistrictPath = memo(function DistrictPath({
+  district,
+  status,
+  isHovered,
+  isSelected,
+  opacity,
+  language,
+  onSelect,
+  onHover,
+  onLeave,
+}: {
+  district: DistrictGeoData;
+  status: TripStatus;
+  isHovered: boolean;
+  isSelected: boolean;
+  opacity: number;
+  language: string;
+  onSelect: () => void;
+  onHover: (e: React.MouseEvent) => void;
+  onLeave: () => void;
+}) {
+  let fillClass = "fill-zinc-800/90";
+  let strokeClass = "stroke-zinc-700/60";
+  let strokeWidth = "1";
+
+  if (isSelected) {
+    fillClass = "fill-white";
+    strokeClass = "stroke-emerald-400";
+    strokeWidth = "2.5";
+  } else {
+    switch (status) {
+      case "visited":
+        fillClass = isHovered ? "fill-emerald-400" : "fill-emerald-500/80";
+        strokeClass = isHovered ? "stroke-emerald-200" : "stroke-emerald-400/50";
+        strokeWidth = isHovered ? "2" : "1.2";
+        break;
+      case "planned":
+        fillClass = isHovered ? "fill-amber-400" : "fill-amber-500/80";
+        strokeClass = isHovered ? "stroke-amber-200" : "stroke-amber-400/50";
+        strokeWidth = isHovered ? "2" : "1.2";
+        break;
+      case "cancelled":
+        fillClass = isHovered ? "fill-rose-400" : "fill-rose-500/80";
+        strokeClass = isHovered ? "stroke-rose-200" : "stroke-rose-400/50";
+        strokeWidth = isHovered ? "2" : "1.2";
+        break;
+      case "bucketlist":
+        fillClass = isHovered ? "fill-purple-400" : "fill-purple-500/80";
+        strokeClass = isHovered ? "stroke-purple-200" : "stroke-purple-400/50";
+        strokeWidth = isHovered ? "2" : "1.2";
+        break;
+      case "never":
+      default:
+        fillClass = isHovered ? "fill-zinc-600" : "fill-zinc-800/85";
+        strokeClass = isHovered ? "stroke-zinc-400" : "stroke-zinc-700/60";
+        strokeWidth = isHovered ? "1.8" : "1";
+        break;
+    }
+  }
+
+  return (
+    <g
+      onClick={onSelect}
+      onMouseEnter={onHover}
+      onMouseLeave={onLeave}
+      className="cursor-pointer transition-colors duration-150"
+      style={{ opacity }}
+    >
+      <path
+        d={district.svgPath}
+        className={`${fillClass} ${strokeClass}`}
+        strokeWidth={strokeWidth}
+      />
+      {district.center && (
+        <text
+          x={district.center[0]}
+          y={district.center[1]}
+          textAnchor="middle"
+          dominantBaseline="central"
+          className="text-[9px] font-medium fill-zinc-300 pointer-events-none select-none tracking-tight opacity-75"
+        >
+          {language === "bn" ? district.nameBn : district.nameEn}
+        </text>
+      )}
+    </g>
+  );
+});
+
 export function MapBangladesh({
   memoriesMap,
   selectedDistrictId,
@@ -25,74 +113,42 @@ export function MapBangladesh({
 }: MapBangladeshProps) {
   const { language, t } = useLanguage();
   const [hoveredDistrict, setHoveredDistrict] = useState<DistrictGeoData | null>(null);
-  const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number } | null>(null);
 
-  const getDistrictStatus = (id: string): TripStatus => {
-    return memoriesMap[id]?.status || "never";
-  };
-
-  const getStatusColor = (status: TripStatus, isHovered: boolean, isSelected: boolean) => {
-    if (isSelected) {
-      return "fill-white stroke-emerald-400 stroke-[3] filter drop-shadow-[0_0_12px_rgba(255,255,255,0.7)]";
+  const handleDistrictHover = (district: DistrictGeoData, e: React.MouseEvent) => {
+    const container = e.currentTarget.closest(".map-container-wrapper");
+    if (container) {
+      const rect = container.getBoundingClientRect();
+      setTooltipPos({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+      });
     }
-
-    switch (status) {
-      case "visited":
-        return isHovered
-          ? "fill-emerald-400 stroke-emerald-200 stroke-[2] filter drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]"
-          : "fill-emerald-500/80 stroke-emerald-400/50 stroke-[1.2]";
-      case "planned":
-        return isHovered
-          ? "fill-amber-400 stroke-amber-200 stroke-[2] filter drop-shadow-[0_0_8px_rgba(245,158,11,0.8)]"
-          : "fill-amber-500/80 stroke-amber-400/50 stroke-[1.2]";
-      case "cancelled":
-        return isHovered
-          ? "fill-rose-400 stroke-rose-200 stroke-[2] filter drop-shadow-[0_0_8px_rgba(244,63,94,0.8)]"
-          : "fill-rose-500/80 stroke-rose-400/50 stroke-[1.2]";
-      case "bucketlist":
-        return isHovered
-          ? "fill-purple-400 stroke-purple-200 stroke-[2] filter drop-shadow-[0_0_8px_rgba(168,85,247,0.8)]"
-          : "fill-purple-500/80 stroke-purple-400/50 stroke-[1.2]";
-      case "never":
-      default:
-        return isHovered
-          ? "fill-zinc-600 stroke-zinc-400 stroke-[1.8]"
-          : "fill-zinc-800/85 stroke-zinc-700/60 stroke-[1]";
-    }
-  };
-
-  const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setMousePos({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
+    setHoveredDistrict(district);
   };
 
   return (
-    <div className={`relative w-full h-full flex items-center justify-center select-none ${className}`}>
+    <div className={`map-container-wrapper relative w-full h-full flex items-center justify-center select-none ${className}`}>
       <svg
         viewBox="0 0 800 1000"
-        className="w-full h-auto max-h-[82vh] transition-transform duration-300 drop-shadow-2xl"
-        onMouseMove={handleMouseMove}
-        onMouseLeave={() => setHoveredDistrict(null)}
+        className="w-full h-auto max-h-[80vh] transition-transform duration-200"
+        style={{ willChange: "transform" }}
       >
         <defs>
           <radialGradient id="mapGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#10b981" stopOpacity="0.08" />
+            <stop offset="0%" stopColor="#10b981" stopOpacity="0.06" />
             <stop offset="100%" stopColor="#09090b" stopOpacity="0" />
           </radialGradient>
         </defs>
 
         <rect width="800" height="1000" fill="url(#mapGlow)" rx="24" />
 
-        <g className="cursor-pointer">
+        <g>
           {BANGLADESH_DISTRICTS.map((district) => {
-            const status = getDistrictStatus(district.id);
+            const status = memoriesMap[district.id]?.status || "never";
             const isHovered = hoveredDistrict?.id === district.id;
             const isSelected = selectedDistrictId === district.id;
 
-            // Opacity dimming if filtered
             let opacity = 1;
             if (activeFilter && status !== activeFilter) {
               opacity = 0.25;
@@ -102,45 +158,33 @@ export function MapBangladesh({
             }
 
             return (
-              <g
+              <DistrictPath
                 key={district.id}
-                onClick={() => onSelectDistrict(district)}
-                onMouseEnter={() => setHoveredDistrict(district)}
-                className="transition-all duration-200"
-                style={{ opacity }}
-              >
-                <path
-                  d={district.svgPath}
-                  className={`transition-colors duration-200 ${getStatusColor(
-                    status,
-                    isHovered,
-                    isSelected
-                  )}`}
-                />
-                {district.center && (
-                  <text
-                    x={district.center[0]}
-                    y={district.center[1]}
-                    textAnchor="middle"
-                    dominantBaseline="central"
-                    className="text-[9px] font-medium fill-zinc-300 pointer-events-none select-none tracking-tight opacity-75"
-                  >
-                    {language === "bn" ? district.nameBn : district.nameEn}
-                  </text>
-                )}
-              </g>
+                district={district}
+                status={status}
+                isHovered={isHovered}
+                isSelected={isSelected}
+                opacity={opacity}
+                language={language}
+                onSelect={() => onSelectDistrict(district)}
+                onHover={(e) => handleDistrictHover(district, e)}
+                onLeave={() => {
+                  setHoveredDistrict(null);
+                  setTooltipPos(null);
+                }}
+              />
             );
           })}
         </g>
       </svg>
 
       {/* Floating Hover Tooltip */}
-      {hoveredDistrict && (
+      {hoveredDistrict && tooltipPos && (
         <div
-          className="absolute z-30 pointer-events-none px-3 py-2 rounded-xl glass-dropdown border border-zinc-700/80 shadow-2xl transition-opacity duration-150 text-xs transform -translate-x-1/2 -translate-y-full mb-2"
+          className="absolute z-30 pointer-events-none px-3 py-2 rounded-xl glass-dropdown border border-zinc-700/80 shadow-xl text-xs transform -translate-x-1/2 -translate-y-full mb-2"
           style={{
-            left: `${mousePos.x}px`,
-            top: `${mousePos.y - 12}px`,
+            left: `${tooltipPos.x}px`,
+            top: `${tooltipPos.y - 10}px`,
           }}
         >
           <div className="font-semibold text-white text-sm">
@@ -152,19 +196,19 @@ export function MapBangladesh({
           <div className="mt-1 flex items-center gap-1.5 pt-1 border-t border-zinc-800">
             <span
               className={`w-2 h-2 rounded-full ${
-                getDistrictStatus(hoveredDistrict.id) === "visited"
+                (memoriesMap[hoveredDistrict.id]?.status || "never") === "visited"
                   ? "bg-emerald-500"
-                  : getDistrictStatus(hoveredDistrict.id) === "planned"
+                  : (memoriesMap[hoveredDistrict.id]?.status || "never") === "planned"
                   ? "bg-amber-500"
-                  : getDistrictStatus(hoveredDistrict.id) === "cancelled"
+                  : (memoriesMap[hoveredDistrict.id]?.status || "never") === "cancelled"
                   ? "bg-rose-500"
-                  : getDistrictStatus(hoveredDistrict.id) === "bucketlist"
+                  : (memoriesMap[hoveredDistrict.id]?.status || "never") === "bucketlist"
                   ? "bg-purple-500"
                   : "bg-zinc-600"
               }`}
             />
             <span className="font-medium text-zinc-200">
-              {t.status[getDistrictStatus(hoveredDistrict.id)]}
+              {t.status[memoriesMap[hoveredDistrict.id]?.status || "never"]}
             </span>
           </div>
         </div>
