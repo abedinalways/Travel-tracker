@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, memo } from "react";
 import { WORLD_COUNTRIES } from "@/config/worldCountries";
 import { CountryGeoData } from "@/types/map";
 import { TravelMemory, TripStatus } from "@/types/trip";
@@ -13,6 +13,74 @@ interface MapWorldProps {
   className?: string;
 }
 
+const CountryPath = memo(function CountryPath({
+  country,
+  status,
+  isHovered,
+  isSelected,
+  onSelect,
+  onHover,
+  onLeave,
+}: {
+  country: CountryGeoData;
+  status: TripStatus;
+  isHovered: boolean;
+  isSelected: boolean;
+  onSelect: () => void;
+  onHover: (e: React.MouseEvent) => void;
+  onLeave: () => void;
+}) {
+  let fillClass = "fill-zinc-800/80";
+  let strokeClass = "stroke-zinc-700/50";
+  let strokeWidth = "0.6";
+
+  if (isSelected) {
+    fillClass = "fill-white";
+    strokeClass = "stroke-emerald-400";
+    strokeWidth = "2";
+  } else {
+    switch (status) {
+      case "visited":
+        fillClass = isHovered ? "fill-emerald-400" : "fill-emerald-500/80";
+        strokeClass = isHovered ? "stroke-emerald-200" : "stroke-emerald-400/40";
+        strokeWidth = isHovered ? "1.5" : "0.8";
+        break;
+      case "planned":
+        fillClass = isHovered ? "fill-amber-400" : "fill-amber-500/80";
+        strokeClass = isHovered ? "stroke-amber-200" : "stroke-amber-400/40";
+        strokeWidth = isHovered ? "1.5" : "0.8";
+        break;
+      case "cancelled":
+        fillClass = isHovered ? "fill-rose-400" : "fill-rose-500/80";
+        strokeClass = isHovered ? "stroke-rose-200" : "stroke-rose-400/40";
+        strokeWidth = isHovered ? "1.5" : "0.8";
+        break;
+      case "bucketlist":
+        fillClass = isHovered ? "fill-purple-400" : "fill-purple-500/80";
+        strokeClass = isHovered ? "stroke-purple-200" : "stroke-purple-400/40";
+        strokeWidth = isHovered ? "1.5" : "0.8";
+        break;
+      case "never":
+      default:
+        fillClass = isHovered ? "fill-zinc-600" : "fill-zinc-800/80";
+        strokeClass = isHovered ? "stroke-zinc-400" : "stroke-zinc-700/50";
+        strokeWidth = isHovered ? "1.2" : "0.6";
+        break;
+    }
+  }
+
+  return (
+    <path
+      d={country.svgPath}
+      onClick={onSelect}
+      onMouseEnter={onHover}
+      onMouseLeave={onLeave}
+      className={`cursor-pointer transition-colors duration-150 ${fillClass} ${strokeClass}`}
+      strokeWidth={strokeWidth}
+    />
+  );
+});
+
 export function MapWorld({
   memoriesMap,
   selectedCountryId,
@@ -21,57 +89,26 @@ export function MapWorld({
 }: MapWorldProps) {
   const { language, t } = useLanguage();
   const [hoveredCountry, setHoveredCountry] = useState<CountryGeoData | null>(null);
-  const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number } | null>(null);
 
-  const getCountryStatus = (id: string): TripStatus => {
-    return memoriesMap[id]?.status || "never";
-  };
-
-  const getStatusColor = (status: TripStatus, isHovered: boolean, isSelected: boolean) => {
-    if (isSelected) {
-      return "fill-white stroke-emerald-400 stroke-[2] filter drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]";
+  const handleCountryHover = (country: CountryGeoData, e: React.MouseEvent) => {
+    const container = e.currentTarget.closest(".world-map-wrapper");
+    if (container) {
+      const rect = container.getBoundingClientRect();
+      setTooltipPos({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top,
+      });
     }
-
-    switch (status) {
-      case "visited":
-        return isHovered
-          ? "fill-emerald-400 stroke-emerald-200 stroke-[1.5]"
-          : "fill-emerald-500/80 stroke-emerald-400/40 stroke-[0.8]";
-      case "planned":
-        return isHovered
-          ? "fill-amber-400 stroke-amber-200 stroke-[1.5]"
-          : "fill-amber-500/80 stroke-amber-400/40 stroke-[0.8]";
-      case "cancelled":
-        return isHovered
-          ? "fill-rose-400 stroke-rose-200 stroke-[1.5]"
-          : "fill-rose-500/80 stroke-rose-400/40 stroke-[0.8]";
-      case "bucketlist":
-        return isHovered
-          ? "fill-purple-400 stroke-purple-200 stroke-[1.5]"
-          : "fill-purple-500/80 stroke-purple-400/40 stroke-[0.8]";
-      case "never":
-      default:
-        return isHovered
-          ? "fill-zinc-600 stroke-zinc-400 stroke-[1.2]"
-          : "fill-zinc-800/80 stroke-zinc-700/50 stroke-[0.6]";
-    }
-  };
-
-  const handleMouseMove = (e: React.MouseEvent<SVGSVGElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setMousePos({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
+    setHoveredCountry(country);
   };
 
   return (
-    <div className={`relative w-full h-full flex items-center justify-center select-none ${className}`}>
+    <div className={`world-map-wrapper relative w-full h-full flex items-center justify-center select-none ${className}`}>
       <svg
         viewBox="0 0 1000 520"
-        className="w-full h-auto max-h-[75vh] transition-transform duration-300 drop-shadow-2xl"
-        onMouseMove={handleMouseMove}
-        onMouseLeave={() => setHoveredCountry(null)}
+        className="w-full h-auto max-h-[75vh] transition-transform duration-200"
+        style={{ willChange: "transform" }}
       >
         <defs>
           <radialGradient id="worldGlow" cx="50%" cy="50%" r="50%">
@@ -82,35 +119,37 @@ export function MapWorld({
 
         <rect width="1000" height="520" fill="url(#worldGlow)" rx="24" />
 
-        <g className="cursor-pointer">
+        <g>
           {WORLD_COUNTRIES.map((country) => {
-            const status = getCountryStatus(country.id);
+            const status = memoriesMap[country.id]?.status || "never";
             const isHovered = hoveredCountry?.id === country.id;
             const isSelected = selectedCountryId === country.id;
 
             return (
-              <path
+              <CountryPath
                 key={country.id}
-                d={country.svgPath}
-                onClick={() => onSelectCountry(country)}
-                onMouseEnter={() => setHoveredCountry(country)}
-                className={`transition-colors duration-150 ${getStatusColor(
-                  status,
-                  isHovered,
-                  isSelected
-                )}`}
+                country={country}
+                status={status}
+                isHovered={isHovered}
+                isSelected={isSelected}
+                onSelect={() => onSelectCountry(country)}
+                onHover={(e) => handleCountryHover(country, e)}
+                onLeave={() => {
+                  setHoveredCountry(null);
+                  setTooltipPos(null);
+                }}
               />
             );
           })}
         </g>
       </svg>
 
-      {hoveredCountry && (
+      {hoveredCountry && tooltipPos && (
         <div
-          className="absolute z-30 pointer-events-none px-3 py-2 rounded-xl glass-dropdown border border-zinc-700/80 shadow-2xl transition-opacity duration-150 text-xs transform -translate-x-1/2 -translate-y-full mb-2"
+          className="absolute z-30 pointer-events-none px-3 py-2 rounded-xl glass-dropdown border border-zinc-700/80 shadow-xl text-xs transform -translate-x-1/2 -translate-y-full mb-2"
           style={{
-            left: `${mousePos.x}px`,
-            top: `${mousePos.y - 12}px`,
+            left: `${tooltipPos.x}px`,
+            top: `${tooltipPos.y - 10}px`,
           }}
         >
           <div className="font-semibold text-white text-sm">
@@ -119,19 +158,19 @@ export function MapWorld({
           <div className="mt-1 flex items-center gap-1.5 pt-1 border-t border-zinc-800">
             <span
               className={`w-2 h-2 rounded-full ${
-                getCountryStatus(hoveredCountry.id) === "visited"
+                (memoriesMap[hoveredCountry.id]?.status || "never") === "visited"
                   ? "bg-emerald-500"
-                  : getCountryStatus(hoveredCountry.id) === "planned"
+                  : (memoriesMap[hoveredCountry.id]?.status || "never") === "planned"
                   ? "bg-amber-500"
-                  : getCountryStatus(hoveredCountry.id) === "cancelled"
+                  : (memoriesMap[hoveredCountry.id]?.status || "never") === "cancelled"
                   ? "bg-rose-500"
-                  : getCountryStatus(hoveredCountry.id) === "bucketlist"
+                  : (memoriesMap[hoveredCountry.id]?.status || "never") === "bucketlist"
                   ? "bg-purple-500"
                   : "bg-zinc-600"
               }`}
             />
             <span className="font-medium text-zinc-200">
-              {t.status[getCountryStatus(hoveredCountry.id)]}
+              {t.status[memoriesMap[hoveredCountry.id]?.status || "never"]}
             </span>
           </div>
         </div>
