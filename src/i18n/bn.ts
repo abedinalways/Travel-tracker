@@ -1,6 +1,6 @@
 export const bn = {
-  appName: "CancelTour & Beyond",
-  tagline: "প্ল্যান যত, ভ্রমণ তত নয় — আপনার ট্রিপ আর ক্যান্সেলেশনের নিখুঁত হিসাব!",
+  appName: "DropTrip: CancelTour & Beyond",
+  tagline: "প্ল্যান যত, ড্রপও তত — ভ্রমণের চেয়ে ক্যান্সেলেশনের নিখুঁত হিসাব!",
   subTagline: "৬৪ জেলার কতটুকু ঘুরলেন আর কতগুলো প্ল্যান শেষ মুহূর্তে ভেস্তে গেল?",
 
   // Navigation & Actions
