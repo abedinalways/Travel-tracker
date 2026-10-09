@@ -1,8 +1,8 @@
 import { bn } from "./bn";
 
 export const en: typeof bn = {
-  appName: "CancelTour & Beyond",
-  tagline: "Big Plans, Empty Itineraries — Your Ultimate Travel & Drop Tracker!",
+  appName: "DropTrip: CancelTour & Beyond",
+  tagline: "Big Plans, Empty Itineraries — The Art of Flaking Out in Luxury!",
   subTagline: "How many of the 64 districts did you actually visit vs flaked out at the last hour?",
 
   nav: {

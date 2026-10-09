@@ -15,17 +15,18 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CancelTour & Beyond 🇧🇩 | Travel & Drop Tracker",
+  title: "DropTrip: CancelTour & Beyond 🇧🇩 | The Ultimate Luxury Tour & Flake Tracker",
   description:
     "Track which of Bangladesh's 64 districts you've explored and which trips got hilariously cancelled at the 11th hour. Local-first, viral story cards, bilingual.",
   keywords: [
+    "DropTrip",
+    "CancelTour",
     "Bangladesh travel map",
     "Tour cancellation tracker",
     "64 districts of Bangladesh",
-    "CancelTour",
     "Local-first travel app",
   ],
-  authors: [{ name: "CancelTour & Beyond" }],
+  authors: [{ name: "DropTrip: CancelTour & Beyond" }],
 };
 
 export const viewport: Viewport = {

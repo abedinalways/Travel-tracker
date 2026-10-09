@@ -1,0 +1,45 @@
+{
+  "default_branch": "main",
+  "branches": [
+    "develop",
+    "feature/dashboard-assembly",
+    "feature/dexie-storage-backup",
+    "feature/foundation-theme-i18n",
+    "feature/funny-premium-branding",
+    "feature/interactive-maps",
+    "feature/performance-smooth-scroll",
+    "feature/social-export-and-backup",
+    "feature/status-drawer-and-forms",
+    "main",
+    "origin",
+    "refactor/project"
+  ],
+  "parent": {
+    "develop": "main",
+    "feature/dashboard-assembly": "main",
+    "feature/dexie-storage-backup": "main",
+    "feature/foundation-theme-i18n": "main",
+    "feature/funny-premium-branding": "main",
+    "feature/interactive-maps": "main",
+    "feature/performance-smooth-scroll": "main",
+    "feature/social-export-and-backup": "main",
+    "feature/status-drawer-and-forms": "main",
+    "main": null,
+    "origin": "main",
+    "refactor/project": "main"
+  },
+  "order": [
+    "main",
+    "develop",
+    "feature/dashboard-assembly",
+    "feature/dexie-storage-backup",
+    "feature/foundation-theme-i18n",
+    "feature/funny-premium-branding",
+    "feature/interactive-maps",
+    "feature/performance-smooth-scroll",
+    "feature/social-export-and-backup",
+    "feature/status-drawer-and-forms",
+    "origin",
+    "refactor/project"
+  ]
+}

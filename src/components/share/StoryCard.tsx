@@ -4,7 +4,8 @@ import React, { forwardRef } from "react";
 import { TripStats, TravelMemory } from "@/types/trip";
 import { BANGLADESH_DISTRICTS } from "@/config/bangladeshDistricts";
 import { useLanguage } from "@/i18n/LanguageContext";
-import { Sparkles, MapPin, Compass } from "lucide-react";
+import { Logo } from "@/components/layout/Logo";
+import { Sparkles, MapPin } from "lucide-react";
 
 interface StoryCardProps {
   stats: TripStats;
@@ -31,16 +32,16 @@ export const StoryCard = forwardRef<HTMLDivElement, StoryCardProps>(
       >
         {/* Top Header */}
         <div className="flex items-center justify-between z-10">
-          <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center">
-              <Compass className="w-5 h-5 text-emerald-400" />
-            </div>
+          <div className="flex items-center gap-3">
+            <Logo size="sm" showText={false} />
             <div>
-              <div className="text-xs uppercase tracking-widest font-mono text-emerald-400 font-bold">
-                CancelTour & Beyond
+              <div className="text-xs uppercase tracking-wider font-mono text-emerald-400 font-bold flex items-center gap-1.5">
+                <span>DropTrip</span>
+                <span className="text-zinc-600">•</span>
+                <span className="text-zinc-400">CancelTour & Beyond</span>
               </div>
-              <div className="text-sm font-bold text-white flex items-center gap-1.5">
-                <span>@{displayName}</span>
+              <div className="text-sm font-bold text-white">
+                @{displayName}
               </div>
             </div>
           </div>
