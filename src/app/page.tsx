@@ -44,7 +44,8 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#09090b] text-zinc-100">
+    <div className="relative min-h-screen flex flex-col bg-[#09090b] text-zinc-100">
+      <div className="bg-ambient" />
       {/* Top Header */}
       <Header
         onOpenShare={() => setIsShareOpen(true)}
