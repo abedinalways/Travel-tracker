@@ -118,7 +118,7 @@ export default function HomePage() {
               {t.footer.privacyNote}
             </p>
             <p className="text-zinc-600">
-              © {new Date().getFullYear()} DropTrip — {t.footer.rights}
+              © DropTrip — {t.footer.rights}
             </p>
           </div>
         </div>
