@@ -98,7 +98,7 @@ export const FeedCard = forwardRef<HTMLDivElement, FeedCardProps>(
                 <span className="w-2 h-2 rounded-full bg-emerald-500" />
               </div>
               <div className="text-2xl font-black text-emerald-400 font-mono mt-0.5">
-                {stats.visitedCount} <span className="text-xs text-zinc-500">/ 64</span>
+                {stats.visitedCount} <span className="text-xs text-zinc-500">/ 64 {t.common.districtsCount}</span>
               </div>
             </div>
 

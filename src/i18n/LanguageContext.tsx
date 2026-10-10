@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { bn } from "./bn";
 import { en } from "./en";
 
@@ -16,19 +16,27 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<Language>(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const saved = localStorage.getItem("canceltour_lang") as Language;
-        if (saved === "bn" || saved === "en") {
-          return saved;
-        }
-      } catch {
-        // LocalStorage not available or restricted
+  // Default to Bengali on first render so server and client HTML match,
+  // then load the persisted preference after mount to avoid a hydration
+  // mismatch (reading localStorage during the useState initializer would
+  // make the client's first render differ from the server's).
+  const [language, setLanguageState] = useState<Language>("bn");
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("canceltour_lang") as Language;
+      if (saved === "bn" || saved === "en") {
+        setLanguageState(saved);
       }
+    } catch {
+      // LocalStorage not available or restricted
     }
-    return "bn";
-  });
+  }, []);
+
+  // Keep <html lang> in sync for accessibility / screen readers.
+  useEffect(() => {
+    document.documentElement.lang = language;
+  }, [language]);
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import { LanguageProvider } from "@/i18n/LanguageContext";
+import { ToastProvider } from "@/components/ui/Toast";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -49,8 +50,10 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-[#09090b] text-zinc-100 selection:bg-emerald-500/30 selection:text-emerald-300">
         <LanguageProvider>
-          {children}
-          <Analytics />
+          <ToastProvider>
+            {children}
+            <Analytics />
+          </ToastProvider>
         </LanguageProvider>
       </body>
     </html>

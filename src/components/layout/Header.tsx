@@ -25,7 +25,7 @@ export function Header({ onOpenShare, onOpenBackup }: HeaderProps) {
           <button
             type="button"
             onClick={toggleLanguage}
-            title="Switch Language"
+            title={t.nav.language}
             className="flex items-center gap-1.5 px-3 py-2 rounded-xl glass-card border border-zinc-700/80 hover:border-zinc-500 text-xs font-semibold text-zinc-200 hover:text-white transition-all cursor-pointer"
           >
             <Languages className="w-4 h-4 text-emerald-400" />
@@ -53,7 +53,6 @@ export function Header({ onOpenShare, onOpenBackup }: HeaderProps) {
           >
             <Share2 className="w-4 h-4" />
             <span className="hidden sm:inline">{t.nav.share}</span>
-            <span className="sm:hidden">Share</span>
           </button>
         </div>
       </div>

@@ -110,7 +110,7 @@ export const StoryCard = forwardRef<HTMLDivElement, StoryCardProps>(
               <span>{t.stats.visitedDistricts}</span>
             </div>
             <div className="text-xl font-black text-emerald-400 mt-1 font-mono">
-              {stats.visitedCount} <span className="text-xs text-zinc-500">/ 64</span>
+              {stats.visitedCount} <span className="text-xs text-zinc-500">/ 64 {t.common.districtsCount}</span>
             </div>
           </div>
 

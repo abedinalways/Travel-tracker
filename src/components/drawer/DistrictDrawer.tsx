@@ -7,7 +7,11 @@ import { useLanguage } from "@/i18n/LanguageContext";
 import { CancelledForm } from "./CancelledForm";
 import { VisitedForm } from "./VisitedForm";
 import confetti from "canvas-confetti";
-import { X, Check, Trash2, MapPin } from "lucide-react";
+import { X, Check, Trash2, MapPin, Globe2 } from "lucide-react";
+import { useModalBehavior } from "@/hooks/useModalBehavior";
+import { RegionMiniMap } from "@/components/maps/RegionMiniMap";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { useToast } from "@/components/ui/Toast";
 
 interface DistrictDrawerProps {
   isOpen: boolean;
@@ -26,18 +30,29 @@ export function DistrictDrawer({
   onSave,
   onDelete,
 }: DistrictDrawerProps) {
+  const { language } = useLanguage();
+  useModalBehavior(isOpen, onClose);
+
   if (!isOpen || !item) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/75 backdrop-blur-md animate-in fade-in duration-200">
-      <DistrictDrawerContent
-        key={item.id}
-        item={item}
-        existingMemory={existingMemory}
-        onClose={onClose}
-        onSave={onSave}
-        onDelete={onDelete}
-      />
+    <div
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/75 backdrop-blur-md animate-in fade-in duration-200"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label={language === "bn" ? item.nameBn : item.nameEn}
+    >
+      <div className="w-full sm:w-auto" onClick={(e) => e.stopPropagation()}>
+        <DistrictDrawerContent
+          key={item.id}
+          item={item}
+          existingMemory={existingMemory}
+          onClose={onClose}
+          onSave={onSave}
+          onDelete={onDelete}
+        />
+      </div>
     </div>
   );
 }
@@ -56,6 +71,8 @@ function DistrictDrawerContent({
   onDelete: (id: string) => Promise<void>;
 }) {
   const { language, t } = useLanguage();
+  const { showToast } = useToast();
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const [status, setStatus] = useState<TripStatus>(
     () => existingMemory?.status || "never"
@@ -99,6 +116,7 @@ function DistrictDrawerContent({
         districtNameBn: item.nameBn,
         divisionEn,
         divisionBn,
+        geoType: isDistrict ? "district" : "country",
         status,
         cancelReason: status === "cancelled" ? cancelReason : undefined,
         cancelReasonCustom:
@@ -114,7 +132,19 @@ function DistrictDrawerContent({
         updatedAt: Date.now(),
       };
 
+      // "Never planned" means the user is clearing any tracked status, so
+      // remove the record entirely instead of persisting a "never" row.
+      if (status === "never") {
+        if (existingMemory) {
+          await onDelete(item.id);
+        }
+        showToast(t.toast.deleted, "success");
+        onClose();
+        return;
+      }
+
       await onSave(memory);
+      showToast(t.toast.saved, "success");
 
       if (status === "visited") {
         confetti({
@@ -135,16 +165,21 @@ function DistrictDrawerContent({
       onClose();
     } catch (err) {
       console.error("Failed to save memory:", err);
+      showToast(t.toast.saveError, "error");
     } finally {
       setIsSaving(false);
     }
   };
 
   const handleDelete = async () => {
-    if (confirm(t.drawer.resetStatus + "?")) {
-      await onDelete(item.id);
-      onClose();
-    }
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDelete = async () => {
+    setShowDeleteConfirm(false);
+    await onDelete(item.id);
+    showToast(t.toast.deleted, "success");
+    onClose();
   };
 
   const statusOptions: {
@@ -219,6 +254,49 @@ function DistrictDrawerContent({
         >
           <X className="w-5 h-5" />
         </button>
+      </div>
+
+      {/* Region mini-map + quick facts */}
+      <div className="pt-4 space-y-3">
+        <div className="flex items-center gap-2 text-xs font-semibold text-zinc-400 uppercase tracking-wide">
+          {isDistrict ? (
+            <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+          ) : (
+            <Globe2 className="w-3.5 h-3.5 text-sky-400" />
+          )}
+          <span>{t.drawer.quickFacts}</span>
+        </div>
+
+        <RegionMiniMap
+          selectedId={item.id}
+          status={status}
+          variant={isDistrict ? "bangladesh" : "world"}
+        />
+
+        <div className="grid grid-cols-2 gap-2">
+          <div className="p-3 rounded-2xl bg-zinc-900/60 border border-zinc-800/80">
+            <div className="text-[10px] uppercase tracking-wide text-zinc-500">
+              {t.drawer.divisionLabel}
+            </div>
+            <div className="text-xs sm:text-sm font-semibold text-zinc-200 mt-0.5">
+              {isDistrict
+                ? language === "bn"
+                  ? item.divisionBn
+                  : item.divisionEn
+                : language === "bn"
+                  ? "বিশ্ব"
+                  : "World"}
+            </div>
+          </div>
+          <div className="p-3 rounded-2xl bg-zinc-900/60 border border-zinc-800/80">
+            <div className="text-[10px] uppercase tracking-wide text-zinc-500">
+              {t.drawer.currentStatus}
+            </div>
+            <div className="text-xs sm:text-sm font-semibold text-zinc-200 mt-0.5">
+              {t.status[status]}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* 5 Dynamic Status Cards */}
@@ -325,6 +403,15 @@ function DistrictDrawerContent({
           </button>
         </div>
       </div>
+
+      {/* Delete confirmation */}
+      <ConfirmDialog
+        isOpen={showDeleteConfirm}
+        title={t.drawer.resetStatus}
+        message={t.backupModal.dangerConfirm}
+        onConfirm={confirmDelete}
+        onCancel={() => setShowDeleteConfirm(false)}
+      />
     </div>
   );
 }

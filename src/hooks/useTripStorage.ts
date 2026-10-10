@@ -4,10 +4,18 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { useCallback, useMemo } from "react";
 import { db } from "@/db/dexieDb";
 import { storageRepository } from "@/db/storageRepository";
-import { TravelMemory, TripStats } from "@/types/trip";
+import { TravelMemory, TripStats, GeoType } from "@/types/trip";
 import { calculateBadge } from "@/config/badges";
+import { WORLD_COUNTRIES } from "@/config/worldCountries";
 
 const DEFAULT_TOTAL_DISTRICTS = 64;
+
+// Older records may not have an explicit geoType. Infer it: world-country
+// records were historically stored with divisionEn === "World".
+function getGeoType(memory: TravelMemory): GeoType {
+  if (memory.geoType) return memory.geoType;
+  return memory.divisionEn === "World" ? "country" : "district";
+}
 
 export function useTripStorage() {
   const memoriesList = useLiveQuery(() => db.memories.toArray(), []);
@@ -34,6 +42,8 @@ export function useTripStorage() {
 
     if (memoriesList) {
       for (const item of memoriesList) {
+        // Only Bangladesh districts feed the 64-district overview stats.
+        if (getGeoType(item) !== "district") continue;
         if (item.status === "visited") visitedCount++;
         else if (item.status === "cancelled") cancelledCount++;
         else if (item.status === "planned") plannedCount++;
@@ -69,6 +79,43 @@ export function useTripStorage() {
     };
   }, [memoriesList]);
 
+  // Separate world-country tallies so country memories no longer leak into
+  // the district stats above.
+  const countryStats = useMemo(() => {
+    let visitedCount = 0;
+    let cancelledCount = 0;
+    let plannedCount = 0;
+    let bucketlistCount = 0;
+
+    if (memoriesList) {
+      for (const item of memoriesList) {
+        if (getGeoType(item) !== "country") continue;
+        if (item.status === "visited") visitedCount++;
+        else if (item.status === "cancelled") cancelledCount++;
+        else if (item.status === "planned") plannedCount++;
+        else if (item.status === "bucketlist") bucketlistCount++;
+      }
+    }
+
+    const marked = visitedCount + cancelledCount + plannedCount + bucketlistCount;
+    const totalCountries = WORLD_COUNTRIES.length;
+    const neverPlannedCount = Math.max(0, totalCountries - marked);
+    const visitedRate =
+      totalCountries > 0
+        ? Math.round((visitedCount / totalCountries) * 100)
+        : 0;
+
+    return {
+      totalCountries,
+      visitedCount,
+      cancelledCount,
+      plannedCount,
+      bucketlistCount,
+      neverPlannedCount,
+      visitedRate,
+    };
+  }, [memoriesList]);
+
   const nickname = nicknameSetting?.value || "";
 
   const saveMemory = useCallback(async (memory: TravelMemory) => {
@@ -99,6 +146,7 @@ export function useTripStorage() {
     memories: memoriesList ?? [],
     memoriesMap,
     stats,
+    countryStats,
     nickname,
     saveMemory,
     deleteMemory,

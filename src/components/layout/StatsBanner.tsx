@@ -27,7 +27,7 @@ export function StatsBanner({ stats, onOpenShare }: StatsBannerProps) {
           <span className="text-2xl sm:text-3xl font-black text-white font-mono">
             {stats.visitedCount}
           </span>
-          <span className="text-xs text-zinc-500 font-mono">/ 64 জেলা</span>
+          <span className="text-xs text-zinc-500 font-mono">/ 64 {t.common.districtsCount}</span>
         </div>
         <div className="mt-3 w-full bg-zinc-800 rounded-full h-1.5 overflow-hidden">
           <div
@@ -52,7 +52,7 @@ export function StatsBanner({ stats, onOpenShare }: StatsBannerProps) {
           <span className="text-xs text-zinc-500">ভেস্তে যাওয়া ট্রিপ</span>
         </div>
         <div className="mt-3 text-[11px] text-zinc-500">
-          বন্ধুদের শেষ মুহূর্তের ধোঁকার সাক্ষী
+          {t.stats.cancelledNote}
         </div>
       </div>
 
@@ -68,7 +68,7 @@ export function StatsBanner({ stats, onOpenShare }: StatsBannerProps) {
           <span className="text-2xl sm:text-3xl font-black text-amber-400 font-mono">
             {stats.cancellationRate}%
           </span>
-          <span className="text-xs text-zinc-500">ড্রপ রেশিও</span>
+          <span className="text-xs text-zinc-500">{t.stats.dropRatio}</span>
         </div>
         <div className="mt-3 w-full bg-zinc-800 rounded-full h-1.5 overflow-hidden">
           <div

@@ -6,6 +6,8 @@ import { FeedCard } from "./FeedCard";
 import { TripStats, TravelMemory } from "@/types/trip";
 import { exportElementAsPng } from "@/lib/exportImage";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { useToast } from "@/components/ui/Toast";
+import { useModalBehavior } from "@/hooks/useModalBehavior";
 import { X, Download, Loader2, Sparkles, User } from "lucide-react";
 
 interface ShareModalProps {
@@ -28,11 +30,14 @@ export function ShareModal({
   onUpdateNickname,
 }: ShareModalProps) {
   const { t } = useLanguage();
+  const { showToast } = useToast();
   const [format, setFormat] = useState<Format>("story");
   const [isExporting, setIsExporting] = useState(false);
 
   const storyCardRef = useRef<HTMLDivElement>(null);
   const feedCardRef = useRef<HTMLDivElement>(null);
+
+  useModalBehavior(isOpen, onClose);
 
   if (!isOpen) return null;
 
@@ -50,14 +55,19 @@ export function ShareModal({
       await exportElementAsPng(targetRef.current, fileName, 2.5);
     } catch (err) {
       console.error("Export error:", err);
-      alert("Failed to export image. Please try again!");
+      showToast(t.common.exportFailed, "error");
     } finally {
       setIsExporting(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md animate-in fade-in duration-200"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
       <div className="relative w-full max-w-2xl bg-[#0e0e12] border border-zinc-800 rounded-3xl p-5 sm:p-6 shadow-2xl flex flex-col max-h-[92vh]">
         {/* Modal Header */}
         <div className="flex items-center justify-between pb-3 border-b border-zinc-800">

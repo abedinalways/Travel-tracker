@@ -10,9 +10,20 @@ import { TravelMemory, TripStatus, TripStats } from "@/types/trip";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { Search, ZoomIn, ZoomOut, RotateCcw, Globe, MapPin } from "lucide-react";
 
+interface CountryStats {
+  totalCountries: number;
+  visitedCount: number;
+  cancelledCount: number;
+  plannedCount: number;
+  bucketlistCount: number;
+  neverPlannedCount: number;
+  visitedRate: number;
+}
+
 interface MapContainerProps {
   memoriesMap: Record<string, TravelMemory>;
   stats: TripStats;
+  countryStats: CountryStats;
   onSelectDistrict: (district: DistrictGeoData) => void;
   onSelectCountry: (country: CountryGeoData) => void;
   selectedId?: string | null;
@@ -32,6 +43,7 @@ const DIVISIONS = [
 export function MapContainer({
   memoriesMap,
   stats,
+  countryStats,
   onSelectDistrict,
   onSelectCountry,
   selectedId,
@@ -221,13 +233,23 @@ export function MapContainer({
       {/* Status Legend */}
       <div className="w-full mt-4">
         <MapLegend
-          counts={{
-            visited: stats.visitedCount,
-            planned: stats.plannedCount,
-            cancelled: stats.cancelledCount,
-            bucketlist: stats.bucketlistCount,
-            never: stats.neverPlannedCount,
-          }}
+          counts={
+            viewMode === "world"
+              ? {
+                  visited: countryStats.visitedCount,
+                  planned: countryStats.plannedCount,
+                  cancelled: countryStats.cancelledCount,
+                  bucketlist: countryStats.bucketlistCount,
+                  never: countryStats.neverPlannedCount,
+                }
+              : {
+                  visited: stats.visitedCount,
+                  planned: stats.plannedCount,
+                  cancelled: stats.cancelledCount,
+                  bucketlist: stats.bucketlistCount,
+                  never: stats.neverPlannedCount,
+                }
+          }
           activeFilter={activeStatusFilter}
           onFilterChange={setActiveStatusFilter}
         />

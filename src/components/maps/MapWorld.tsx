@@ -18,6 +18,7 @@ const CountryPath = memo(function CountryPath({
   status,
   isHovered,
   isSelected,
+  language,
   onSelect,
   onHover,
   onLeave,
@@ -26,6 +27,7 @@ const CountryPath = memo(function CountryPath({
   status: TripStatus;
   isHovered: boolean;
   isSelected: boolean;
+  language: string;
   onSelect: () => void;
   onHover: (e: React.MouseEvent) => void;
   onLeave: () => void;
@@ -75,7 +77,16 @@ const CountryPath = memo(function CountryPath({
       onClick={onSelect}
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
-      className={`cursor-pointer transition-colors duration-150 ${fillClass} ${strokeClass}`}
+      role="button"
+      tabIndex={0}
+      aria-label={`${language === "bn" ? country.nameBn : country.nameEn} — ${status}`}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onSelect();
+        }
+      }}
+      className={`cursor-pointer transition-colors duration-150 focus:outline-none focus-visible:stroke-emerald-400 ${fillClass} ${strokeClass}`}
       strokeWidth={strokeWidth}
     />
   );
@@ -92,12 +103,18 @@ export function MapWorld({
   const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number } | null>(null);
 
   const handleCountryHover = (country: CountryGeoData, e: React.MouseEvent) => {
-    const container = e.currentTarget.closest(".world-map-wrapper");
+    const container = e.currentTarget.closest(
+      ".world-map-wrapper"
+    ) as HTMLElement | null;
     if (container) {
       const rect = container.getBoundingClientRect();
+      // Wrapper is CSS-scaled by the parent zoom; convert screen-space
+      // offsets back to the wrapper's local coordinates.
+      const scaleX = rect.width / container.offsetWidth || 1;
+      const scaleY = rect.height / container.offsetHeight || 1;
       setTooltipPos({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
+        x: (e.clientX - rect.left) / scaleX,
+        y: (e.clientY - rect.top) / scaleY,
       });
     }
     setHoveredCountry(country);
@@ -132,6 +149,7 @@ export function MapWorld({
                 status={status}
                 isHovered={isHovered}
                 isSelected={isSelected}
+                language={language}
                 onSelect={() => onSelectCountry(country)}
                 onHover={(e) => handleCountryHover(country, e)}
                 onLeave={() => {

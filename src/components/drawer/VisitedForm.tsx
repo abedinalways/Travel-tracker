@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
+import { useToast } from "@/components/ui/Toast";
 import { compressAndConvertToBase64 } from "@/lib/imageCompressor";
 import { Star, Upload, X, Loader2, Calendar, MapPin, UtensilsCrossed } from "lucide-react";
 import Image from "next/image";
@@ -38,6 +39,7 @@ export function VisitedForm({
   onRemovePhoto,
 }: VisitedFormProps) {
   const { t } = useLanguage();
+  const { showToast } = useToast();
   const [isCompressing, setIsCompressing] = useState(false);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,7 +47,7 @@ export function VisitedForm({
     if (!files || files.length === 0) return;
 
     if (photos.length >= 3) {
-      alert("Maximum 3 photos allowed!");
+      showToast(t.common.maxPhotos, "error");
       return;
     }
 

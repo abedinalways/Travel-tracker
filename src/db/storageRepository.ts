@@ -55,6 +55,8 @@ export const storageRepository = {
 
       await db.transaction("rw", db.memories, db.settings, async () => {
         await db.memories.clear();
+        // Also clear existing settings so stale keys don't survive a restore.
+        await db.settings.clear();
         if (parsed.memories.length > 0) {
           await db.memories.bulkPut(parsed.memories);
         }

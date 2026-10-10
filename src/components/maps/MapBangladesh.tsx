@@ -80,7 +80,16 @@ const DistrictPath = memo(function DistrictPath({
       onClick={onSelect}
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
-      className="cursor-pointer transition-colors duration-150"
+      role="button"
+      tabIndex={0}
+      aria-label={`${language === "bn" ? district.nameBn : district.nameEn} — ${status}`}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onSelect();
+        }
+      }}
+      className="cursor-pointer transition-colors duration-150 focus:outline-none focus-visible:stroke-emerald-400"
       style={{ opacity }}
     >
       <path
@@ -116,12 +125,19 @@ export function MapBangladesh({
   const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number } | null>(null);
 
   const handleDistrictHover = (district: DistrictGeoData, e: React.MouseEvent) => {
-    const container = e.currentTarget.closest(".map-container-wrapper");
+    const container = e.currentTarget.closest(
+      ".map-container-wrapper"
+    ) as HTMLElement | null;
     if (container) {
       const rect = container.getBoundingClientRect();
+      // The wrapper is CSS-scaled by the parent (zoom). getBoundingClientRect
+      // returns scaled pixels, but the tooltip is positioned in the wrapper's
+      // local coordinate space, so divide out the scale factor.
+      const scaleX = rect.width / container.offsetWidth || 1;
+      const scaleY = rect.height / container.offsetHeight || 1;
       setTooltipPos({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
+        x: (e.clientX - rect.left) / scaleX,
+        y: (e.clientY - rect.top) / scaleY,
       });
     }
     setHoveredDistrict(district);
