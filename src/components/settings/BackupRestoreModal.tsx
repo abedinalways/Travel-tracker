@@ -2,7 +2,16 @@
 
 import React, { useState } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
-import { Download, Upload, Trash2, X, Check, AlertCircle, Database } from "lucide-react";
+import { useModalBehavior } from "@/hooks/useModalBehavior";
+import { useToast } from "@/components/ui/Toast";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import {
+  DownloadIcon,
+  UploadIcon,
+  DeleteIcon,
+  CloseIcon,
+  DatabaseIconComp,
+} from "@/components/ui/icons";
 
 interface BackupRestoreModalProps {
   isOpen: boolean;
@@ -20,10 +29,10 @@ export function BackupRestoreModal({
   onResetAll,
 }: BackupRestoreModalProps) {
   const { t } = useLanguage();
-  const [statusMessage, setStatusMessage] = useState<{
-    type: "success" | "error";
-    text: string;
-  } | null>(null);
+  const { showToast } = useToast();
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
+
+  useModalBehavior(isOpen, onClose);
 
   if (!isOpen) return null;
 
@@ -39,15 +48,9 @@ export function BackupRestoreModal({
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
-      setStatusMessage({
-        type: "success",
-        text: "Backup downloaded successfully!",
-      });
+      showToast(t.toast.exportSuccess, "success");
     } catch {
-      setStatusMessage({
-        type: "error",
-        text: "Failed to export backup.",
-      });
+      showToast(t.toast.exportError, "error");
     }
   };
 
@@ -61,15 +64,9 @@ export function BackupRestoreModal({
       if (content) {
         const success = await onRestore(content);
         if (success) {
-          setStatusMessage({
-            type: "success",
-            text: t.backupModal.restoreSuccess,
-          });
+          showToast(t.backupModal.restoreSuccess, "success");
         } else {
-          setStatusMessage({
-            type: "error",
-            text: t.backupModal.restoreError,
-          });
+          showToast(t.backupModal.restoreError, "error");
         }
       }
     };
@@ -78,29 +75,30 @@ export function BackupRestoreModal({
   };
 
   const handleReset = async () => {
-    if (confirm(t.backupModal.dangerConfirm)) {
-      await onResetAll();
-      setStatusMessage({
-        type: "success",
-        text: "All local data cleared.",
-      });
-      setTimeout(() => {
-        onClose();
-      }, 1000);
-    }
+    await onResetAll();
+    setShowResetConfirm(false);
+    showToast(t.toast.resetSuccess, "success");
+    setTimeout(() => {
+      onClose();
+    }, 1000);
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-md bg-[#0e0e12] border border-zinc-800 rounded-3xl p-6 shadow-2xl space-y-5">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <div className="relative w-full max-w-md bg-card border border-border rounded-xl p-6 shadow-2xl space-y-5">
         {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-zinc-800">
+        <div className="flex items-center justify-between pb-3 border-b border-border">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400">
-              <Database className="w-5 h-5" />
+            <div className="p-2 rounded-sm bg-secondary text-primary border border-border">
+              <DatabaseIconComp size={20} />
             </div>
             <div>
-              <h3 className="text-base sm:text-lg font-bold text-white">
+              <h3 className="text-base sm:text-lg font-bold text-card-foreground">
                 {t.backupModal.title}
               </h3>
             </div>
@@ -108,33 +106,15 @@ export function BackupRestoreModal({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
+            className="p-1.5 rounded-sm text-muted-foreground hover:text-card-foreground hover:bg-secondary transition-colors cursor-pointer"
           >
-            <X className="w-5 h-5" />
+            <CloseIcon size={18} />
           </button>
         </div>
 
-        <p className="text-xs text-zinc-400 leading-relaxed">
+        <p className="text-xs text-muted-foreground leading-relaxed">
           {t.backupModal.description}
         </p>
-
-        {/* Feedback Message */}
-        {statusMessage && (
-          <div
-            className={`p-3 rounded-xl text-xs flex items-center gap-2 ${
-              statusMessage.type === "success"
-                ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30"
-                : "bg-rose-500/15 text-rose-300 border border-rose-500/30"
-            }`}
-          >
-            {statusMessage.type === "success" ? (
-              <Check className="w-4 h-4 shrink-0" />
-            ) : (
-              <AlertCircle className="w-4 h-4 shrink-0" />
-            )}
-            <span>{statusMessage.text}</span>
-          </div>
-        )}
 
         {/* Actions Grid */}
         <div className="space-y-3">
@@ -142,31 +122,31 @@ export function BackupRestoreModal({
           <button
             type="button"
             onClick={handleDownloadBackup}
-            className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-zinc-900 border border-zinc-700/80 hover:border-emerald-500/50 hover:bg-zinc-800 transition-all text-left cursor-pointer group"
+            className="w-full flex items-center justify-between p-3.5 rounded-sm bg-secondary border border-border hover:border-primary/50 transition-all text-left cursor-pointer group"
           >
             <div className="flex items-center gap-3">
-              <Download className="w-5 h-5 text-emerald-400 group-hover:scale-110 transition-transform" />
+              <DownloadIcon size={20} className="text-primary group-hover:scale-110 transition-transform" />
               <div>
-                <div className="text-xs sm:text-sm font-semibold text-zinc-100">
+                <div className="text-xs sm:text-sm font-semibold text-card-foreground">
                   {t.backupModal.exportBtn}
                 </div>
-                <div className="text-[11px] text-zinc-500">
-                  Save all statuses & memories locally
+                <div className="text-[11px] text-muted-foreground">
+                  {t.backupModal.exportSub}
                 </div>
               </div>
             </div>
           </button>
 
           {/* Upload JSON */}
-          <label className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-zinc-900 border border-zinc-700/80 hover:border-sky-500/50 hover:bg-zinc-800 transition-all text-left cursor-pointer group">
+          <label className="w-full flex items-center justify-between p-3.5 rounded-sm bg-secondary border border-border hover:border-primary/50 transition-all text-left cursor-pointer group">
             <div className="flex items-center gap-3">
-              <Upload className="w-5 h-5 text-sky-400 group-hover:scale-110 transition-transform" />
+              <UploadIcon size={20} className="text-primary group-hover:scale-110 transition-transform" />
               <div>
-                <div className="text-xs sm:text-sm font-semibold text-zinc-100">
+                <div className="text-xs sm:text-sm font-semibold text-card-foreground">
                   {t.backupModal.importBtn}
                 </div>
-                <div className="text-[11px] text-zinc-500">
-                  Restore from a previously saved JSON
+                <div className="text-[11px] text-muted-foreground">
+                  {t.backupModal.importSub}
                 </div>
               </div>
             </div>
@@ -180,17 +160,26 @@ export function BackupRestoreModal({
         </div>
 
         {/* Danger Zone */}
-        <div className="pt-3 border-t border-zinc-800/80">
+        <div className="pt-3 border-t border-border">
           <button
             type="button"
-            onClick={handleReset}
-            className="w-full flex items-center justify-center gap-2 p-3 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 transition-all text-xs font-semibold cursor-pointer"
+            onClick={() => setShowResetConfirm(true)}
+            className="w-full flex items-center justify-center gap-2 p-3 rounded-sm bg-secondary border border-border text-muted-foreground hover:text-card-foreground hover:border-primary/50 transition-all text-xs font-semibold cursor-pointer"
           >
-            <Trash2 className="w-4 h-4" />
+            <DeleteIcon size={16} />
             <span>{t.backupModal.dangerZone}</span>
           </button>
         </div>
       </div>
+
+      {/* Reset Confirmation */}
+      <ConfirmDialog
+        isOpen={showResetConfirm}
+        title={t.backupModal.dangerZone}
+        message={t.backupModal.dangerConfirm}
+        onConfirm={handleReset}
+        onCancel={() => setShowResetConfirm(false)}
+      />
     </div>
   );
 }
