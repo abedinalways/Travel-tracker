@@ -36,40 +36,40 @@ const DistrictPath = memo(function DistrictPath({
   onHover: (e: React.MouseEvent) => void;
   onLeave: () => void;
 }) {
-  let fillClass = "fill-[#141826]";
-  let strokeClass = "stroke-[#252e47]";
+  let fillClass = "fill-[var(--secondary)]";
+  let strokeClass = "stroke-[var(--border)]";
   let strokeWidth = "1";
 
   if (isSelected) {
-    fillClass = "fill-emerald-300";
-    strokeClass = "stroke-white";
+    fillClass = "fill-primary";
+    strokeClass = "stroke-foreground";
     strokeWidth = "2.5";
   } else {
     switch (status) {
       case "visited":
-        fillClass = isHovered ? "fill-emerald-400" : "fill-emerald-500/90";
-        strokeClass = isHovered ? "stroke-emerald-200" : "stroke-emerald-400/60";
+        fillClass = isHovered ? "fill-primary" : "fill-primary/90";
+        strokeClass = isHovered ? "stroke-foreground" : "stroke-primary/70";
         strokeWidth = isHovered ? "2.2" : "1.2";
         break;
       case "planned":
-        fillClass = isHovered ? "fill-amber-400" : "fill-amber-500/90";
-        strokeClass = isHovered ? "stroke-amber-200" : "stroke-amber-400/60";
+        fillClass = isHovered ? "fill-primary/80" : "fill-primary/60";
+        strokeClass = isHovered ? "stroke-primary" : "stroke-primary/50";
         strokeWidth = isHovered ? "2.2" : "1.2";
         break;
       case "cancelled":
-        fillClass = isHovered ? "fill-rose-400" : "fill-rose-500/90";
-        strokeClass = isHovered ? "stroke-rose-200" : "stroke-rose-400/60";
-        strokeWidth = isHovered ? "2.2" : "1.2";
+        fillClass = isHovered ? "fill-[var(--border)]" : "fill-[var(--secondary)]";
+        strokeClass = isHovered ? "stroke-primary/50" : "stroke-muted-foreground/30";
+        strokeWidth = isHovered ? "2" : "1";
         break;
       case "bucketlist":
-        fillClass = isHovered ? "fill-purple-400" : "fill-purple-500/90";
-        strokeClass = isHovered ? "stroke-purple-200" : "stroke-purple-400/60";
+        fillClass = isHovered ? "fill-primary/70" : "fill-primary/40";
+        strokeClass = isHovered ? "stroke-primary" : "stroke-primary/40";
         strokeWidth = isHovered ? "2.2" : "1.2";
         break;
       case "never":
       default:
-        fillClass = isHovered ? "fill-[#242b42]" : "fill-[#131726]";
-        strokeClass = isHovered ? "stroke-emerald-500/50" : "stroke-[#222a42]";
+        fillClass = isHovered ? "fill-muted" : "fill-[var(--secondary)]";
+        strokeClass = isHovered ? "stroke-primary/50" : "stroke-[var(--border)]";
         strokeWidth = isHovered ? "2" : "1";
         break;
     }
@@ -152,8 +152,8 @@ export function MapBangladesh({
       >
         <defs>
           <radialGradient id="mapGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#10b981" stopOpacity="0.06" />
-            <stop offset="100%" stopColor="#09090b" stopOpacity="0" />
+            <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.06" />
+            <stop offset="100%" stopColor="var(--background)" stopOpacity="0" />
           </radialGradient>
         </defs>
 
@@ -197,33 +197,29 @@ export function MapBangladesh({
       {/* Floating Hover Tooltip */}
       {hoveredDistrict && tooltipPos && (
         <div
-          className="absolute z-30 pointer-events-none px-3 py-2 rounded-xl glass-dropdown border border-zinc-700/80 shadow-xl text-xs transform -translate-x-1/2 -translate-y-full mb-2"
+          className="absolute z-30 pointer-events-none px-3 py-2 rounded-sm bg-card border border-border shadow-xl text-xs transform -translate-x-1/2 -translate-y-full mb-2"
           style={{
             left: `${tooltipPos.x}px`,
             top: `${tooltipPos.y - 10}px`,
           }}
         >
-          <div className="font-semibold text-white text-sm">
+          <div className="font-semibold text-card-foreground text-sm">
             {language === "bn" ? hoveredDistrict.nameBn : hoveredDistrict.nameEn}
           </div>
-          <div className="text-[11px] text-zinc-400">
+          <div className="text-[11px] text-muted-foreground">
             {language === "bn" ? hoveredDistrict.divisionBn : hoveredDistrict.divisionEn} বিভাগ
           </div>
-          <div className="mt-1 flex items-center gap-1.5 pt-1 border-t border-zinc-800">
+          <div className="mt-1 flex items-center gap-1.5 pt-1 border-t border-border">
             <span
               className={`w-2 h-2 rounded-full ${
-                (memoriesMap[hoveredDistrict.id]?.status || "never") === "visited"
-                  ? "bg-emerald-500"
-                  : (memoriesMap[hoveredDistrict.id]?.status || "never") === "planned"
-                  ? "bg-amber-500"
-                  : (memoriesMap[hoveredDistrict.id]?.status || "never") === "cancelled"
-                  ? "bg-rose-500"
-                  : (memoriesMap[hoveredDistrict.id]?.status || "never") === "bucketlist"
-                  ? "bg-purple-500"
-                  : "bg-zinc-600"
+                (memoriesMap[hoveredDistrict.id]?.status || "never") === "visited" ||
+                (memoriesMap[hoveredDistrict.id]?.status || "never") === "planned" ||
+                (memoriesMap[hoveredDistrict.id]?.status || "never") === "bucketlist"
+                  ? "bg-primary"
+                  : "bg-muted-foreground"
               }`}
             />
-            <span className="font-medium text-zinc-200">
+            <span className="font-medium text-card-foreground">
               {t.status[memoriesMap[hoveredDistrict.id]?.status || "never"]}
             </span>
           </div>

@@ -13,19 +13,19 @@ interface RegionMiniMapProps {
 }
 
 const STATUS_FILL: Record<TripStatus, string> = {
-  visited: "#10b981",
-  planned: "#f59e0b",
-  cancelled: "#f43f5e",
-  bucketlist: "#a855f7",
-  never: "#3f3f46",
+  visited: "var(--status-visited)",
+  planned: "var(--status-planned)",
+  cancelled: "var(--status-cancelled)",
+  bucketlist: "var(--status-bucketlist)",
+  never: "var(--status-never)",
 };
 
 const STATUS_STROKE: Record<TripStatus, string> = {
-  visited: "#6ee7b7",
-  planned: "#fcd34d",
-  cancelled: "#fda4af",
-  bucketlist: "#d8b4fe",
-  never: "#52525b",
+  visited: "var(--primary)",
+  planned: "var(--status-planned)",
+  cancelled: "var(--status-cancelled)",
+  bucketlist: "var(--status-bucketlist)",
+  never: "var(--status-stroke)",
 };
 
 const MiniPath = memo(function MiniPath({
@@ -42,8 +42,8 @@ const MiniPath = memo(function MiniPath({
   return (
     <path
       d={d}
-      fill={isHighlighted ? fill : "#18181b"}
-      stroke={isHighlighted ? stroke : "#27272a"}
+      fill={isHighlighted ? fill : "var(--card)"}
+      stroke={isHighlighted ? stroke : "var(--border)"}
       strokeWidth={isHighlighted ? 2 : 0.6}
       opacity={isHighlighted ? 1 : 0.5}
     />

@@ -27,7 +27,7 @@ export function Header({ onOpenShare, onOpenBackup, onOpenRoast }: HeaderProps) 
             type="button"
             onClick={onOpenRoast}
             title={language === "bn" ? "আমারে রোস্ট করো" : "Roast Me"}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-gradient-to-r from-rose-500/20 to-red-500/20 border border-rose-500/40 hover:border-rose-400 text-rose-300 hover:text-rose-100 text-xs font-bold transition-all cursor-pointer shadow-sm active:scale-95 hover:shadow-[0_0_15px_rgba(244,63,94,0.3)]"
+            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-sm bg-secondary border border-border hover:border-primary/50 text-card-foreground text-xs font-bold transition-all cursor-pointer shadow-sm active:scale-95"
           >
             <span className="text-sm">💀</span>
             <span className="hidden sm:inline font-bold">
@@ -40,9 +40,9 @@ export function Header({ onOpenShare, onOpenBackup, onOpenRoast }: HeaderProps) 
             type="button"
             onClick={toggleLanguage}
             title={t.nav.language}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-2xl glass-card-interactive border border-white/10 hover:border-emerald-500/50 text-xs font-bold text-zinc-200 hover:text-white transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-sm bg-secondary border border-border hover:border-primary/50 text-xs font-bold text-card-foreground transition-all cursor-pointer"
           >
-            <LanguageIcon size={16} className="text-emerald-400" />
+            <LanguageIcon size={15} className="text-primary" />
             <span>
               {language === "bn" ? "English" : "বাংলা"}
             </span>
@@ -53,19 +53,19 @@ export function Header({ onOpenShare, onOpenBackup, onOpenRoast }: HeaderProps) 
             type="button"
             onClick={onOpenBackup}
             title={t.nav.backup}
-            className="p-2 sm:px-3 sm:py-2 rounded-2xl glass-card-interactive border border-white/10 hover:border-sky-500/50 text-xs font-bold text-zinc-200 hover:text-white transition-all cursor-pointer flex items-center gap-1.5"
+            className="p-1.5 sm:px-3 sm:py-2 rounded-sm bg-secondary border border-border hover:border-primary/50 text-xs font-bold text-card-foreground transition-all cursor-pointer flex items-center gap-1.5"
           >
-            <DatabaseIconComp size={16} className="text-sky-400" />
+            <DatabaseIconComp size={15} className="text-primary" />
             <span className="hidden sm:inline">{t.nav.backup}</span>
           </button>
 
-          {/* Viral Social Card Trigger */}
+          {/* Viral Social Card Trigger - Primary Button */}
           <button
             type="button"
             onClick={onOpenShare}
-            className="flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-2xl bg-gradient-to-r from-emerald-400 via-teal-400 to-amber-400 hover:brightness-110 text-zinc-950 text-xs sm:text-sm font-black transition-all shadow-[0_0_25px_rgba(16,185,129,0.4)] cursor-pointer active:scale-95"
+            className="flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-sm bg-primary hover:bg-primary/90 text-primary-foreground text-xs sm:text-sm font-black transition-all shadow-sm cursor-pointer active:scale-95"
           >
-            <ShareIcon size={16} />
+            <ShareIcon size={15} />
             <span className="hidden sm:inline">{t.nav.share}</span>
           </button>
         </div>

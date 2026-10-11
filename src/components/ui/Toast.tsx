@@ -52,16 +52,12 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
           <div
             key={toast.id}
             role="status"
-            className={`pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-2xl border shadow-2xl backdrop-blur-md text-xs sm:text-sm font-semibold animate-in fade-in slide-in-from-bottom-2 duration-300 ${
-              toast.type === "success"
-                ? "bg-emerald-500/15 border-emerald-500/40 text-emerald-200"
-                : "bg-rose-500/15 border-rose-500/40 text-rose-200"
-            }`}
+            className="pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-sm border border-border bg-card shadow-2xl backdrop-blur-md text-xs sm:text-sm font-semibold animate-in fade-in slide-in-from-bottom-2 duration-300 text-card-foreground"
           >
             {toast.type === "success" ? (
-              <CheckIcon size={16} className="shrink-0 text-emerald-400" />
+              <CheckIcon size={16} className="shrink-0 text-primary" />
             ) : (
-              <WarningIcon size={16} className="shrink-0 text-rose-400" />
+              <WarningIcon size={16} className="shrink-0 text-primary" />
             )}
             <span>{toast.message}</span>
             <button

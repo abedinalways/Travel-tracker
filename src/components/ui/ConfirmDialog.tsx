@@ -32,19 +32,19 @@ export function ConfirmDialog({
       onClick={onCancel}
     >
       <div
-        className="relative w-full max-w-sm bg-[#0e0e12] border border-zinc-800 rounded-3xl p-6 shadow-2xl space-y-4"
+        className="relative w-full max-w-sm bg-card border border-border rounded-xl p-6 shadow-2xl space-y-4"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 shrink-0">
-            <WarningIcon size={20} className="text-rose-400" />
+          <div className="p-2.5 rounded-sm bg-secondary border border-border shrink-0">
+            <WarningIcon size={20} className="text-primary" />
           </div>
-          <h3 className="text-base sm:text-lg font-bold text-white leading-tight">
+          <h3 className="text-base sm:text-lg font-bold text-card-foreground leading-tight">
             {title}
           </h3>
         </div>
 
-        <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
           {message}
         </p>
 
@@ -52,7 +52,7 @@ export function ConfirmDialog({
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
+            className="px-4 py-2 rounded-sm text-xs sm:text-sm font-semibold text-muted-foreground hover:text-card-foreground hover:bg-secondary transition-colors cursor-pointer"
           >
             {t.confirm.cancel}
           </button>
@@ -60,7 +60,7 @@ export function ConfirmDialog({
             type="button"
             autoFocus
             onClick={onConfirm}
-            className="px-5 py-2 rounded-xl text-xs sm:text-sm font-bold bg-rose-500 text-white hover:bg-rose-400 transition-all shadow-[0_0_18px_rgba(244,63,94,0.35)] cursor-pointer"
+            className="px-5 py-2 rounded-sm text-xs sm:text-sm font-bold bg-primary text-primary-foreground hover:bg-primary/90 transition-all shadow-sm cursor-pointer"
           >
             {t.confirm.confirm}
           </button>
