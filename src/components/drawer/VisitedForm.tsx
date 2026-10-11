@@ -81,26 +81,26 @@ export function VisitedForm({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {/* Travel Date */}
         <div>
-          <label className="text-xs font-semibold text-zinc-300 flex items-center gap-1.5 mb-1.5">
-            <CalendarIcon size={14} className="text-emerald-400" />
+          <label className="text-xs font-semibold text-card-foreground flex items-center gap-1.5 mb-1.5">
+            <CalendarIcon size={14} className="text-primary" />
             <span>{t.drawer.travelDate}</span>
           </label>
           <input
             type="date"
             value={visitedDate || ""}
             onChange={(e) => onChangeVisitedDate(e.target.value)}
-            className="w-full px-3 py-2 rounded-xl bg-zinc-900/80 border border-zinc-700 text-xs text-zinc-200 focus:outline-none focus:border-emerald-500/50"
+            className="w-full px-3 py-2 rounded-sm bg-secondary border border-border text-xs text-card-foreground focus:outline-none focus:border-primary"
           />
         </div>
 
         {/* Rating */}
         <div>
-          <label className="text-xs font-semibold text-zinc-300 flex items-center justify-between mb-1.5">
+          <label className="text-xs font-semibold text-card-foreground flex items-center justify-between mb-1.5">
             <span className="flex items-center gap-1.5">
-              <StarIconComp size={14} className="text-amber-400" />
+              <StarIconComp size={14} className="text-primary" />
               <span>{t.drawer.rating}</span>
             </span>
-            <span className="text-[11px] font-medium text-amber-300 italic">
+            <span className="text-[11px] font-medium text-primary italic">
               {t.drawer.ratingLabels?.[(rating || 5) as 1 | 2 | 3 | 4 | 5]}
             </span>
           </label>
@@ -110,14 +110,14 @@ export function VisitedForm({
                 key={star}
                 type="button"
                 onClick={() => onChangeRating(star)}
-                className="p-1 text-amber-400 hover:scale-125 transition-transform cursor-pointer"
+                className="p-1 text-primary hover:scale-125 transition-transform cursor-pointer"
               >
                 <StarIconComp
                   size={18}
                   className={
                     star <= (rating || 5)
-                      ? "text-amber-400"
-                      : "text-zinc-600"
+                      ? "text-primary"
+                      : "text-border"
                   }
                 />
               </button>
@@ -129,8 +129,8 @@ export function VisitedForm({
       {/* Favorite Spot & Local Food */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label className="text-xs font-semibold text-zinc-300 flex items-center gap-1.5 mb-1.5">
-            <MapPinIcon size={14} className="text-emerald-400" />
+          <label className="text-xs font-semibold text-card-foreground flex items-center gap-1.5 mb-1.5">
+            <MapPinIcon size={14} className="text-primary" />
             <span>{t.drawer.favoriteSpot}</span>
           </label>
           <input
@@ -138,14 +138,14 @@ export function VisitedForm({
             value={favoriteSpot || ""}
             onChange={(e) => onChangeFavoriteSpot(e.target.value)}
             placeholder={t.drawer.favoriteSpotPlaceholder}
-            className="w-full px-3 py-2 rounded-xl bg-zinc-900/80 border border-zinc-700 text-xs text-zinc-200 placeholder:text-zinc-500 focus:outline-none focus:border-emerald-500/50"
+            className="w-full px-3 py-2 rounded-sm bg-secondary border border-border text-xs text-card-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary"
           />
         </div>
 
         <div>
-          <label className="text-xs font-semibold text-zinc-300 flex items-center justify-between mb-1.5">
+          <label className="text-xs font-semibold text-card-foreground flex items-center justify-between mb-1.5">
             <span className="flex items-center gap-1.5">
-              <FoodIcon size={14} className="text-amber-400" />
+              <FoodIcon size={14} className="text-primary" />
               <span>{t.drawer.favoriteFood}</span>
             </span>
           </label>
@@ -154,7 +154,7 @@ export function VisitedForm({
             value={favoriteFood || ""}
             onChange={(e) => onChangeFavoriteFood(e.target.value)}
             placeholder={t.drawer.favoriteFoodPlaceholder}
-            className="w-full px-3 py-2 rounded-xl bg-zinc-900/80 border border-zinc-700 text-xs text-zinc-200 placeholder:text-zinc-500 focus:outline-none focus:border-emerald-500/50"
+            className="w-full px-3 py-2 rounded-sm bg-secondary border border-border text-xs text-card-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary"
           />
           {/* Quick Popular Food Chips */}
           <div className="flex flex-wrap gap-1 mt-1.5">
@@ -174,7 +174,7 @@ export function VisitedForm({
                     favoriteFood ? `${favoriteFood}, ${foodItem}` : foodItem
                   )
                 }
-                className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-800/80 hover:bg-amber-500/20 hover:text-amber-300 text-zinc-400 border border-zinc-700/60 transition-colors cursor-pointer"
+                className="text-[10px] px-2 py-0.5 rounded-sm bg-secondary hover:border-primary/50 text-muted-foreground hover:text-primary border border-border transition-colors cursor-pointer"
               >
                 + {foodItem}
               </button>
@@ -185,7 +185,7 @@ export function VisitedForm({
 
       {/* Notes / Diary */}
       <div>
-        <label className="text-xs font-semibold text-zinc-300 block mb-1.5">
+        <label className="text-xs font-semibold text-card-foreground block mb-1.5">
           {t.drawer.notes}
         </label>
         <textarea
@@ -193,7 +193,7 @@ export function VisitedForm({
           value={notes || ""}
           onChange={(e) => onChangeNotes(e.target.value)}
           placeholder={t.drawer.notesPlaceholder}
-          className="w-full px-3 py-2 rounded-xl bg-zinc-900/80 border border-zinc-700 text-xs text-zinc-200 placeholder:text-zinc-500 focus:outline-none focus:border-emerald-500/50 resize-none"
+          className="w-full px-3 py-2 rounded-sm bg-secondary border border-border text-xs text-card-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary resize-none"
         />
         {/* Quick Highlights / Memory Chips */}
         <div className="flex flex-wrap gap-1 mt-1.5">
@@ -211,7 +211,7 @@ export function VisitedForm({
               onClick={() =>
                 onChangeNotes(notes ? `${notes} • ${tag}` : tag)
               }
-              className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-800/80 hover:bg-emerald-500/20 hover:text-emerald-300 text-zinc-400 border border-zinc-700/60 transition-colors cursor-pointer"
+              className="text-[10px] px-2 py-0.5 rounded-sm bg-secondary hover:border-primary/50 text-muted-foreground hover:text-primary border border-border transition-colors cursor-pointer"
             >
               + {tag}
             </button>
@@ -222,10 +222,10 @@ export function VisitedForm({
       {/* Photo Upload Section */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <label className="text-xs font-semibold text-zinc-300">
+          <label className="text-xs font-semibold text-card-foreground">
             {t.drawer.attachPhotos} ({photos.length}/3)
           </label>
-          <span className="text-[11px] text-zinc-500">{t.drawer.uploadHint}</span>
+          <span className="text-[11px] text-muted-foreground">{t.drawer.uploadHint}</span>
         </div>
 
         <div className="flex items-center gap-3">
@@ -233,7 +233,7 @@ export function VisitedForm({
           {photos.map((src, index) => (
             <div
               key={index}
-              className="relative w-16 h-16 rounded-xl overflow-hidden border border-zinc-700 group shrink-0"
+              className="relative w-16 h-16 rounded-sm overflow-hidden border border-border group shrink-0"
             >
               <Image
                 src={src}
@@ -245,7 +245,7 @@ export function VisitedForm({
               <button
                 type="button"
                 onClick={() => onRemovePhoto(index)}
-                className="absolute top-1 right-1 p-1 rounded-full bg-black/80 text-white hover:bg-rose-600 transition-colors cursor-pointer"
+                className="absolute top-1 right-1 p-1 rounded-sm bg-background/90 text-primary hover:bg-secondary transition-colors cursor-pointer"
               >
                 <CloseIcon size={12} />
               </button>
@@ -254,9 +254,9 @@ export function VisitedForm({
 
           {/* Upload Button */}
           {photos.length < 3 && (
-            <label className="w-16 h-16 rounded-xl border-2 border-dashed border-zinc-700 hover:border-emerald-500/60 flex flex-col items-center justify-center text-zinc-400 hover:text-emerald-400 transition-colors cursor-pointer shrink-0 bg-zinc-900/40">
+            <label className="w-16 h-16 rounded-sm border border-dashed border-border hover:border-primary flex flex-col items-center justify-center text-muted-foreground hover:text-primary transition-colors cursor-pointer shrink-0 bg-secondary">
               {isCompressing ? (
-                <SpinnerIcon size={18} className="animate-spin" />
+                <SpinnerIcon size={18} className="animate-spin text-primary" />
               ) : (
                 <>
                   <UploadIcon size={18} />

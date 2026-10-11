@@ -1,8 +1,8 @@
 "use client";
 
 import { useLiveQuery } from "dexie-react-hooks";
-import { useCallback, useMemo } from "react";
-import { db } from "@/db/dexieDb";
+import { useCallback, useEffect, useMemo } from "react";
+import { db, requestPersistentStorage } from "@/db/dexieDb";
 import { storageRepository } from "@/db/storageRepository";
 import { TravelMemory, TripStats, GeoType } from "@/types/trip";
 import { calculateBadge } from "@/config/badges";
@@ -18,6 +18,11 @@ function getGeoType(memory: TravelMemory): GeoType {
 }
 
 export function useTripStorage() {
+  useEffect(() => {
+    // Request persistent IndexedDB storage so data is never evicted
+    void requestPersistentStorage();
+  }, []);
+
   const memoriesList = useLiveQuery(() => db.memories.toArray(), []);
   const nicknameSetting = useLiveQuery(
     () => db.settings.get("user_nickname"),
