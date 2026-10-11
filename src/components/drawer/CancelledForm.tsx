@@ -28,13 +28,13 @@ export function CancelledForm({
   return (
     <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
       <div className="flex items-center justify-between gap-2">
-        <label className="text-xs sm:text-sm font-semibold text-rose-300 flex items-center gap-1.5">
+        <label className="text-xs sm:text-sm font-semibold text-card-foreground flex items-center gap-1.5">
           <span>{t.drawer.cancelReasonTitle}</span>
         </label>
         <button
           type="button"
           onClick={handleRandomExcuse}
-          className="shrink-0 px-2.5 py-1 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 text-[11px] font-bold transition-all cursor-pointer active:scale-95 flex items-center gap-1"
+          className="shrink-0 px-2.5 py-1 rounded-sm bg-secondary hover:border-primary/50 border border-border text-primary text-[11px] font-bold transition-all cursor-pointer active:scale-95 flex items-center gap-1"
           title={language === "bn" ? "একটা অজুহাত বানিয়ে দাও" : "Give me an excuse"}
         >
           <span>🎲</span>
@@ -52,10 +52,10 @@ export function CancelledForm({
               key={reason.id}
               type="button"
               onClick={() => onSelectReason(reason.id)}
-              className={`flex items-center gap-3 p-2.5 rounded-xl text-left text-xs sm:text-sm transition-all duration-200 border cursor-pointer ${
+              className={`flex items-center gap-3 p-2.5 rounded-sm text-left text-xs sm:text-sm transition-all duration-200 border cursor-pointer ${
                 isSelected
-                  ? "bg-rose-500/20 border-rose-500 text-white shadow-[0_0_15px_rgba(244,63,94,0.25)]"
-                  : "bg-zinc-900/60 border-zinc-800 text-zinc-300 hover:bg-zinc-800 hover:text-white"
+                  ? "bg-secondary border-primary text-card-foreground ring-1 ring-primary shadow-sm"
+                  : "bg-secondary border-border text-muted-foreground hover:border-primary/40 hover:text-card-foreground"
               }`}
             >
               <span className="text-lg shrink-0">{reason.emoji}</span>
@@ -74,7 +74,7 @@ export function CancelledForm({
             value={customReason || ""}
             onChange={(e) => onChangeCustomReason(e.target.value)}
             placeholder={t.drawer.customReasonPlaceholder}
-            className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900/80 border border-zinc-700 text-xs sm:text-sm text-zinc-100 placeholder:text-zinc-500 focus:outline-none focus:border-rose-500/60"
+            className="w-full px-3.5 py-2.5 rounded-sm bg-secondary border border-border text-xs sm:text-sm text-card-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary"
           />
         </div>
       )}
