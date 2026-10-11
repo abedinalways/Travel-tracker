@@ -90,15 +90,15 @@ export function BackupRestoreModal({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="relative w-full max-w-md bg-[#0e0e12] border border-zinc-800 rounded-3xl p-6 shadow-2xl space-y-5">
+      <div className="relative w-full max-w-md bg-card border border-border rounded-xl p-6 shadow-2xl space-y-5">
         {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-zinc-800">
+        <div className="flex items-center justify-between pb-3 border-b border-border">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400">
+            <div className="p-2 rounded-sm bg-secondary text-primary border border-border">
               <DatabaseIconComp size={20} />
             </div>
             <div>
-              <h3 className="text-base sm:text-lg font-bold text-white">
+              <h3 className="text-base sm:text-lg font-bold text-card-foreground">
                 {t.backupModal.title}
               </h3>
             </div>
@@ -106,13 +106,13 @@ export function BackupRestoreModal({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
+            className="p-1.5 rounded-sm text-muted-foreground hover:text-card-foreground hover:bg-secondary transition-colors cursor-pointer"
           >
             <CloseIcon size={18} />
           </button>
         </div>
 
-        <p className="text-xs text-zinc-400 leading-relaxed">
+        <p className="text-xs text-muted-foreground leading-relaxed">
           {t.backupModal.description}
         </p>
 
@@ -122,15 +122,15 @@ export function BackupRestoreModal({
           <button
             type="button"
             onClick={handleDownloadBackup}
-            className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-zinc-900 border border-zinc-700/80 hover:border-emerald-500/50 hover:bg-zinc-800 transition-all text-left cursor-pointer group"
+            className="w-full flex items-center justify-between p-3.5 rounded-sm bg-secondary border border-border hover:border-primary/50 transition-all text-left cursor-pointer group"
           >
             <div className="flex items-center gap-3">
-              <DownloadIcon size={20} className="text-emerald-400 group-hover:scale-110 transition-transform" />
+              <DownloadIcon size={20} className="text-primary group-hover:scale-110 transition-transform" />
               <div>
-                <div className="text-xs sm:text-sm font-semibold text-zinc-100">
+                <div className="text-xs sm:text-sm font-semibold text-card-foreground">
                   {t.backupModal.exportBtn}
                 </div>
-                <div className="text-[11px] text-zinc-500">
+                <div className="text-[11px] text-muted-foreground">
                   {t.backupModal.exportSub}
                 </div>
               </div>
@@ -138,14 +138,14 @@ export function BackupRestoreModal({
           </button>
 
           {/* Upload JSON */}
-          <label className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-zinc-900 border border-zinc-700/80 hover:border-sky-500/50 hover:bg-zinc-800 transition-all text-left cursor-pointer group">
+          <label className="w-full flex items-center justify-between p-3.5 rounded-sm bg-secondary border border-border hover:border-primary/50 transition-all text-left cursor-pointer group">
             <div className="flex items-center gap-3">
-              <UploadIcon size={20} className="text-sky-400 group-hover:scale-110 transition-transform" />
+              <UploadIcon size={20} className="text-primary group-hover:scale-110 transition-transform" />
               <div>
-                <div className="text-xs sm:text-sm font-semibold text-zinc-100">
+                <div className="text-xs sm:text-sm font-semibold text-card-foreground">
                   {t.backupModal.importBtn}
                 </div>
-                <div className="text-[11px] text-zinc-500">
+                <div className="text-[11px] text-muted-foreground">
                   {t.backupModal.importSub}
                 </div>
               </div>
@@ -160,11 +160,11 @@ export function BackupRestoreModal({
         </div>
 
         {/* Danger Zone */}
-        <div className="pt-3 border-t border-zinc-800/80">
+        <div className="pt-3 border-t border-border">
           <button
             type="button"
             onClick={() => setShowResetConfirm(true)}
-            className="w-full flex items-center justify-center gap-2 p-3 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 transition-all text-xs font-semibold cursor-pointer"
+            className="w-full flex items-center justify-center gap-2 p-3 rounded-sm bg-secondary border border-border text-muted-foreground hover:text-card-foreground hover:border-primary/50 transition-all text-xs font-semibold cursor-pointer"
           >
             <DeleteIcon size={16} />
             <span>{t.backupModal.dangerZone}</span>

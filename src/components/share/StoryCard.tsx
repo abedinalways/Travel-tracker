@@ -24,10 +24,10 @@ export const StoryCard = forwardRef<HTMLDivElement, StoryCardProps>(
     return (
       <div
         ref={ref}
-        className="w-[405px] h-[720px] bg-[#09090b] text-white p-7 flex flex-col justify-between relative overflow-hidden select-none border border-zinc-800 rounded-3xl shadow-2xl font-sans"
+        className="w-[405px] h-[720px] bg-card text-card-foreground p-7 flex flex-col justify-between relative overflow-hidden select-none border border-border rounded-xl shadow-2xl font-sans"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 10% 10%, rgba(16, 185, 129, 0.18), transparent 45%), radial-gradient(circle at 90% 90%, rgba(244, 63, 94, 0.15), transparent 50%), radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.08), transparent 60%)",
+            "radial-gradient(circle at 10% 10%, rgba(16, 185, 129, 0.18), transparent 45%), radial-gradient(circle at 90% 90%, rgba(16, 185, 129, 0.08), transparent 50%)",
         }}
       >
         {/* Top Header */}
@@ -35,28 +35,28 @@ export const StoryCard = forwardRef<HTMLDivElement, StoryCardProps>(
           <div className="flex items-center gap-3">
             <Logo size="sm" showText={false} />
             <div>
-              <div className="text-xs uppercase tracking-wider font-mono text-emerald-400 font-bold flex items-center gap-1.5">
+              <div className="text-xs uppercase tracking-wider font-mono text-primary font-bold flex items-center gap-1.5">
                 <span>DropTrip</span>
-                <span className="text-zinc-600">•</span>
-                <span className="text-zinc-400">CancelTour & Beyond</span>
+                <span className="text-muted-foreground">•</span>
+                <span className="text-muted-foreground">CancelTour & Beyond</span>
               </div>
-              <div className="text-sm font-bold text-white">
+              <div className="text-sm font-bold text-card-foreground">
                 @{displayName}
               </div>
             </div>
           </div>
-          <div className="px-3 py-1 rounded-full bg-zinc-900/90 border border-zinc-700 text-[11px] font-mono text-zinc-300">
+          <div className="px-3 py-1 rounded-full bg-secondary border border-border text-[11px] font-mono text-muted-foreground">
             🇧🇩 BD 64
           </div>
         </div>
 
         {/* Hero Badge Box */}
-        <div className="z-10 mt-2 p-4 rounded-2xl bg-zinc-900/80 border border-zinc-700/80 backdrop-blur-md text-center shadow-xl">
+        <div className="z-10 mt-2 p-4 rounded-xl bg-secondary border border-border backdrop-blur-md text-center shadow-xl">
           <div className="text-3xl mb-1">{stats.badge.icon}</div>
-          <div className="text-sm sm:text-base font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-emerald-300 to-rose-300">
+          <div className="text-sm sm:text-base font-extrabold text-primary">
             {language === "bn" ? stats.badge.titleBn : stats.badge.titleEn}
           </div>
-          <p className="text-[11px] text-zinc-400 mt-1 max-w-xs mx-auto leading-relaxed">
+          <p className="text-[11px] text-muted-foreground mt-1 max-w-xs mx-auto leading-relaxed">
             {language === "bn"
               ? stats.badge.descriptionBn
               : stats.badge.descriptionEn}
@@ -71,21 +71,21 @@ export const StoryCard = forwardRef<HTMLDivElement, StoryCardProps>(
           >
             {BANGLADESH_DISTRICTS.map((d) => {
               const status = memoriesMap[d.id]?.status || "never";
-              let fill = "#27272a";
-              let stroke = "#3f3f46";
+              let fill = "var(--status-never)";
+              let stroke = "var(--status-stroke)";
 
               if (status === "visited") {
-                fill = "#10b981";
-                stroke = "#6ee7b7";
+                fill = "var(--status-visited)";
+                stroke = "var(--primary)";
               } else if (status === "planned") {
-                fill = "#f59e0b";
-                stroke = "#fcd34d";
+                fill = "var(--status-planned)";
+                stroke = "var(--status-planned)";
               } else if (status === "cancelled") {
-                fill = "#f43f5e";
-                stroke = "#fda4af";
+                fill = "var(--status-cancelled)";
+                stroke = "var(--status-cancelled)";
               } else if (status === "bucketlist") {
-                fill = "#a855f7";
-                stroke = "#d8b4fe";
+                fill = "var(--status-bucketlist)";
+                stroke = "var(--status-bucketlist)";
               }
 
               return (
@@ -104,54 +104,54 @@ export const StoryCard = forwardRef<HTMLDivElement, StoryCardProps>(
         {/* 4 Key Stats Grid */}
         <div className="grid grid-cols-2 gap-2.5 z-10">
           {/* Visited */}
-          <div className="p-3 rounded-2xl bg-zinc-900/90 border border-emerald-500/30">
-            <div className="text-[11px] text-zinc-400 flex items-center gap-1.5 font-medium">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+          <div className="p-3 rounded-sm bg-secondary border border-border">
+            <div className="text-[11px] text-muted-foreground flex items-center gap-1.5 font-medium">
+              <span className="w-2 h-2 rounded-full bg-primary" />
               <span>{t.stats.visitedDistricts}</span>
             </div>
-            <div className="text-xl font-black text-emerald-400 mt-1 font-mono">
-              {stats.visitedCount} <span className="text-xs text-zinc-500">/ 64 {t.common.districtsCount}</span>
+            <div className="text-xl font-black text-primary mt-1 font-mono">
+              {stats.visitedCount} <span className="text-xs text-muted-foreground">/ 64 {t.common.districtsCount}</span>
             </div>
           </div>
 
           {/* Cancelled */}
-          <div className="p-3 rounded-2xl bg-zinc-900/90 border border-rose-500/30">
-            <div className="text-[11px] text-zinc-400 flex items-center gap-1.5 font-medium">
-              <span className="w-2 h-2 rounded-full bg-rose-500" />
+          <div className="p-3 rounded-sm bg-secondary border border-border">
+            <div className="text-[11px] text-muted-foreground flex items-center gap-1.5 font-medium">
+              <span className="w-2 h-2 rounded-full bg-muted-foreground" />
               <span>{t.stats.cancelledDistricts}</span>
             </div>
-            <div className="text-xl font-black text-rose-400 mt-1 font-mono">
+            <div className="text-xl font-black text-card-foreground mt-1 font-mono">
               {stats.cancelledCount}
             </div>
           </div>
 
           {/* Planned */}
-          <div className="p-3 rounded-2xl bg-zinc-900/90 border border-amber-500/30">
-            <div className="text-[11px] text-zinc-400 flex items-center gap-1.5 font-medium">
-              <span className="w-2 h-2 rounded-full bg-amber-500" />
+          <div className="p-3 rounded-sm bg-secondary border border-border">
+            <div className="text-[11px] text-muted-foreground flex items-center gap-1.5 font-medium">
+              <span className="w-2 h-2 rounded-full bg-primary" />
               <span>{t.stats.plannedDistricts}</span>
             </div>
-            <div className="text-xl font-black text-amber-400 mt-1 font-mono">
+            <div className="text-xl font-black text-primary mt-1 font-mono">
               {stats.plannedCount}
             </div>
           </div>
 
           {/* Cancellation Rate */}
-          <div className="p-3 rounded-2xl bg-zinc-900/90 border border-rose-500/40">
-            <div className="text-[11px] text-zinc-400 flex items-center gap-1.5 font-medium">
-              <SparklesIconComp size={13} className="text-rose-400" />
+          <div className="p-3 rounded-sm bg-secondary border border-border">
+            <div className="text-[11px] text-muted-foreground flex items-center gap-1.5 font-medium">
+              <SparklesIconComp size={13} className="text-primary" />
               <span>{t.stats.cancelRate}</span>
             </div>
-            <div className="text-xl font-black text-rose-400 mt-1 font-mono">
+            <div className="text-xl font-black text-primary mt-1 font-mono">
               {stats.cancellationRate}%
             </div>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="pt-3 border-t border-zinc-800/80 flex items-center justify-between text-[11px] text-zinc-400 z-10">
+        <div className="pt-3 border-t border-border flex items-center justify-between text-[11px] text-muted-foreground z-10">
           <div className="flex items-center gap-1.5">
-            <MapPinIcon size={14} className="text-emerald-400" />
+            <MapPinIcon size={14} className="text-primary" />
             <span className="italic">{t.shareModal.funQuote}</span>
           </div>
           <span className="font-mono text-zinc-500 text-[10px]">
