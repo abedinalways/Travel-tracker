@@ -36,41 +36,41 @@ const DistrictPath = memo(function DistrictPath({
   onHover: (e: React.MouseEvent) => void;
   onLeave: () => void;
 }) {
-  let fillClass = "fill-zinc-800/90";
-  let strokeClass = "stroke-zinc-700/60";
+  let fillClass = "fill-[var(--secondary)]";
+  let strokeClass = "stroke-[var(--border)]";
   let strokeWidth = "1";
 
   if (isSelected) {
-    fillClass = "fill-white";
-    strokeClass = "stroke-emerald-400";
+    fillClass = "fill-primary";
+    strokeClass = "stroke-foreground";
     strokeWidth = "2.5";
   } else {
     switch (status) {
       case "visited":
-        fillClass = isHovered ? "fill-emerald-400" : "fill-emerald-500/80";
-        strokeClass = isHovered ? "stroke-emerald-200" : "stroke-emerald-400/50";
-        strokeWidth = isHovered ? "2" : "1.2";
+        fillClass = isHovered ? "fill-primary" : "fill-primary/90";
+        strokeClass = isHovered ? "stroke-foreground" : "stroke-primary/70";
+        strokeWidth = isHovered ? "2.2" : "1.2";
         break;
       case "planned":
-        fillClass = isHovered ? "fill-amber-400" : "fill-amber-500/80";
-        strokeClass = isHovered ? "stroke-amber-200" : "stroke-amber-400/50";
-        strokeWidth = isHovered ? "2" : "1.2";
+        fillClass = isHovered ? "fill-primary/80" : "fill-primary/60";
+        strokeClass = isHovered ? "stroke-primary" : "stroke-primary/50";
+        strokeWidth = isHovered ? "2.2" : "1.2";
         break;
       case "cancelled":
-        fillClass = isHovered ? "fill-rose-400" : "fill-rose-500/80";
-        strokeClass = isHovered ? "stroke-rose-200" : "stroke-rose-400/50";
-        strokeWidth = isHovered ? "2" : "1.2";
+        fillClass = isHovered ? "fill-[var(--border)]" : "fill-[var(--secondary)]";
+        strokeClass = isHovered ? "stroke-primary/50" : "stroke-muted-foreground/30";
+        strokeWidth = isHovered ? "2" : "1";
         break;
       case "bucketlist":
-        fillClass = isHovered ? "fill-purple-400" : "fill-purple-500/80";
-        strokeClass = isHovered ? "stroke-purple-200" : "stroke-purple-400/50";
-        strokeWidth = isHovered ? "2" : "1.2";
+        fillClass = isHovered ? "fill-primary/70" : "fill-primary/40";
+        strokeClass = isHovered ? "stroke-primary" : "stroke-primary/40";
+        strokeWidth = isHovered ? "2.2" : "1.2";
         break;
       case "never":
       default:
-        fillClass = isHovered ? "fill-zinc-600" : "fill-zinc-800/85";
-        strokeClass = isHovered ? "stroke-zinc-400" : "stroke-zinc-700/60";
-        strokeWidth = isHovered ? "1.8" : "1";
+        fillClass = isHovered ? "fill-muted" : "fill-[var(--secondary)]";
+        strokeClass = isHovered ? "stroke-primary/50" : "stroke-[var(--border)]";
+        strokeWidth = isHovered ? "2" : "1";
         break;
     }
   }
@@ -80,12 +80,21 @@ const DistrictPath = memo(function DistrictPath({
       onClick={onSelect}
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
-      className="cursor-pointer transition-colors duration-150"
+      role="button"
+      tabIndex={0}
+      aria-label={`${language === "bn" ? district.nameBn : district.nameEn} — ${status}`}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onSelect();
+        }
+      }}
+      className="cursor-pointer transition-all duration-150 focus:outline-none focus-visible:stroke-emerald-400"
       style={{ opacity }}
     >
       <path
         d={district.svgPath}
-        className={`${fillClass} ${strokeClass}`}
+        className={`${fillClass} ${strokeClass} transition-colors duration-150`}
         strokeWidth={strokeWidth}
       />
       {district.center && (
@@ -94,7 +103,7 @@ const DistrictPath = memo(function DistrictPath({
           y={district.center[1]}
           textAnchor="middle"
           dominantBaseline="central"
-          className="text-[9px] font-medium fill-zinc-300 pointer-events-none select-none tracking-tight opacity-75"
+          className="text-[9px] font-semibold fill-zinc-200/90 pointer-events-none select-none tracking-tight drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
         >
           {language === "bn" ? district.nameBn : district.nameEn}
         </text>
@@ -116,12 +125,19 @@ export function MapBangladesh({
   const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number } | null>(null);
 
   const handleDistrictHover = (district: DistrictGeoData, e: React.MouseEvent) => {
-    const container = e.currentTarget.closest(".map-container-wrapper");
+    const container = e.currentTarget.closest(
+      ".map-container-wrapper"
+    ) as HTMLElement | null;
     if (container) {
       const rect = container.getBoundingClientRect();
+      // The wrapper is CSS-scaled by the parent (zoom). getBoundingClientRect
+      // returns scaled pixels, but the tooltip is positioned in the wrapper's
+      // local coordinate space, so divide out the scale factor.
+      const scaleX = rect.width / container.offsetWidth || 1;
+      const scaleY = rect.height / container.offsetHeight || 1;
       setTooltipPos({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
+        x: (e.clientX - rect.left) / scaleX,
+        y: (e.clientY - rect.top) / scaleY,
       });
     }
     setHoveredDistrict(district);
@@ -136,8 +152,8 @@ export function MapBangladesh({
       >
         <defs>
           <radialGradient id="mapGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#10b981" stopOpacity="0.06" />
-            <stop offset="100%" stopColor="#09090b" stopOpacity="0" />
+            <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.06" />
+            <stop offset="100%" stopColor="var(--background)" stopOpacity="0" />
           </radialGradient>
         </defs>
 
@@ -181,33 +197,29 @@ export function MapBangladesh({
       {/* Floating Hover Tooltip */}
       {hoveredDistrict && tooltipPos && (
         <div
-          className="absolute z-30 pointer-events-none px-3 py-2 rounded-xl glass-dropdown border border-zinc-700/80 shadow-xl text-xs transform -translate-x-1/2 -translate-y-full mb-2"
+          className="absolute z-30 pointer-events-none px-3 py-2 rounded-sm bg-card border border-border shadow-xl text-xs transform -translate-x-1/2 -translate-y-full mb-2"
           style={{
             left: `${tooltipPos.x}px`,
             top: `${tooltipPos.y - 10}px`,
           }}
         >
-          <div className="font-semibold text-white text-sm">
+          <div className="font-semibold text-card-foreground text-sm">
             {language === "bn" ? hoveredDistrict.nameBn : hoveredDistrict.nameEn}
           </div>
-          <div className="text-[11px] text-zinc-400">
+          <div className="text-[11px] text-muted-foreground">
             {language === "bn" ? hoveredDistrict.divisionBn : hoveredDistrict.divisionEn} বিভাগ
           </div>
-          <div className="mt-1 flex items-center gap-1.5 pt-1 border-t border-zinc-800">
+          <div className="mt-1 flex items-center gap-1.5 pt-1 border-t border-border">
             <span
               className={`w-2 h-2 rounded-full ${
-                (memoriesMap[hoveredDistrict.id]?.status || "never") === "visited"
-                  ? "bg-emerald-500"
-                  : (memoriesMap[hoveredDistrict.id]?.status || "never") === "planned"
-                  ? "bg-amber-500"
-                  : (memoriesMap[hoveredDistrict.id]?.status || "never") === "cancelled"
-                  ? "bg-rose-500"
-                  : (memoriesMap[hoveredDistrict.id]?.status || "never") === "bucketlist"
-                  ? "bg-purple-500"
-                  : "bg-zinc-600"
+                (memoriesMap[hoveredDistrict.id]?.status || "never") === "visited" ||
+                (memoriesMap[hoveredDistrict.id]?.status || "never") === "planned" ||
+                (memoriesMap[hoveredDistrict.id]?.status || "never") === "bucketlist"
+                  ? "bg-primary"
+                  : "bg-muted-foreground"
               }`}
             />
-            <span className="font-medium text-zinc-200">
+            <span className="font-medium text-card-foreground">
               {t.status[memoriesMap[hoveredDistrict.id]?.status || "never"]}
             </span>
           </div>
