@@ -1,6 +1,11 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useSyncExternalStore,
+} from "react";
 import { bn } from "./bn";
 import { en } from "./en";
 
@@ -15,23 +20,43 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  // Default to Bengali on first render so server and client HTML match,
-  // then load the persisted preference after mount to avoid a hydration
-  // mismatch (reading localStorage during the useState initializer would
-  // make the client's first render differ from the server's).
-  const [language, setLanguageState] = useState<Language>("bn");
+const STORAGE_KEY = "canceltour_lang";
+// Fired in the current tab so useSyncExternalStore re-reads after we write.
+const LANG_CHANGE_EVENT = "canceltour:lang-change";
 
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem("canceltour_lang") as Language;
-      if (saved === "bn" || saved === "en") {
-        setLanguageState(saved);
-      }
-    } catch {
-      // LocalStorage not available or restricted
-    }
-  }, []);
+function readStoredLanguage(): Language {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved === "en" ? "en" : "bn";
+  } catch {
+    // LocalStorage not available or restricted
+    return "bn";
+  }
+}
+
+function subscribe(onStoreChange: () => void): () => void {
+  // "storage" keeps other tabs in sync; the custom event updates this tab.
+  window.addEventListener("storage", onStoreChange);
+  window.addEventListener(LANG_CHANGE_EVENT, onStoreChange);
+  return () => {
+    window.removeEventListener("storage", onStoreChange);
+    window.removeEventListener(LANG_CHANGE_EVENT, onStoreChange);
+  };
+}
+
+function getSnapshot(): Language {
+  return readStoredLanguage();
+}
+
+// Server always renders the Bengali default so HTML matches the client's
+// first paint; the stored preference is applied after hydration without a
+// mismatch (useSyncExternalStore re-renders when the snapshot differs).
+function getServerSnapshot(): Language {
+  return "bn";
+}
+
+export function LanguageProvider({ children }: { children: React.ReactNode }) {
+  const language = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   // Keep <html lang> in sync for accessibility / screen readers.
   useEffect(() => {
@@ -39,11 +64,13 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   }, [language]);
 
   const setLanguage = (lang: Language) => {
-    setLanguageState(lang);
     try {
-      localStorage.setItem("canceltour_lang", lang);
+      localStorage.setItem(STORAGE_KEY, lang);
     } catch {
-      // ignore
+      // ignore write failures; snapshot still reads current value
+    }
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event(LANG_CHANGE_EVENT));
     }
   };
 
