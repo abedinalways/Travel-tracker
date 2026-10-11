@@ -5,7 +5,7 @@ import { TripStats, TravelMemory } from "@/types/trip";
 import { BANGLADESH_DISTRICTS } from "@/config/bangladeshDistricts";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { Logo } from "@/components/layout/Logo";
-import { Sparkles, MapPin } from "lucide-react";
+import { SparklesIconComp, MapPinIcon } from "@/components/ui/icons";
 
 interface FeedCardProps {
   stats: TripStats;
@@ -24,10 +24,10 @@ export const FeedCard = forwardRef<HTMLDivElement, FeedCardProps>(
     return (
       <div
         ref={ref}
-        className="w-[520px] h-[520px] bg-[#09090b] text-white p-7 flex flex-col justify-between relative overflow-hidden select-none border border-zinc-800 rounded-3xl shadow-2xl"
+        className="w-[520px] h-[520px] bg-card text-card-foreground p-7 flex flex-col justify-between relative overflow-hidden select-none border border-border rounded-xl shadow-2xl font-sans"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 15% 15%, rgba(16, 185, 129, 0.16), transparent 50%), radial-gradient(circle at 85% 85%, rgba(244, 63, 94, 0.16), transparent 50%)",
+            "radial-gradient(circle at 15% 15%, rgba(16, 185, 129, 0.16), transparent 50%), radial-gradient(circle at 85% 85%, rgba(16, 185, 129, 0.08), transparent 50%)",
         }}
       >
         {/* Header */}
@@ -35,17 +35,17 @@ export const FeedCard = forwardRef<HTMLDivElement, FeedCardProps>(
           <div className="flex items-center gap-3">
             <Logo size="sm" showText={false} />
             <div>
-              <div className="text-xs uppercase tracking-wider font-mono text-emerald-400 font-bold flex items-center gap-1.5">
+              <div className="text-xs uppercase tracking-wider font-mono text-primary font-bold flex items-center gap-1.5">
                 <span>DropTrip</span>
-                <span className="text-zinc-600">•</span>
-                <span className="text-zinc-400">CancelTour & Beyond</span>
+                <span className="text-muted-foreground">•</span>
+                <span className="text-muted-foreground">CancelTour & Beyond</span>
               </div>
-              <div className="text-base font-bold text-white">
+              <div className="text-base font-bold text-card-foreground">
                 @{displayName}
               </div>
             </div>
           </div>
-          <div className="px-3 py-1 rounded-full bg-zinc-900 border border-zinc-700 text-xs font-mono text-zinc-300">
+          <div className="px-3 py-1 rounded-full bg-secondary border border-border text-xs font-mono text-muted-foreground">
             {stats.badge.icon} {language === "bn" ? stats.badge.titleBn : stats.badge.titleEn}
           </div>
         </div>
@@ -60,21 +60,21 @@ export const FeedCard = forwardRef<HTMLDivElement, FeedCardProps>(
             >
               {BANGLADESH_DISTRICTS.map((d) => {
                 const status = memoriesMap[d.id]?.status || "never";
-                let fill = "#27272a";
-                let stroke = "#3f3f46";
+                let fill = "var(--status-never)";
+                let stroke = "var(--status-stroke)";
 
                 if (status === "visited") {
-                  fill = "#10b981";
-                  stroke = "#6ee7b7";
+                  fill = "var(--status-visited)";
+                  stroke = "var(--primary)";
                 } else if (status === "planned") {
-                  fill = "#f59e0b";
-                  stroke = "#fcd34d";
+                  fill = "var(--status-planned)";
+                  stroke = "var(--status-planned)";
                 } else if (status === "cancelled") {
-                  fill = "#f43f5e";
-                  stroke = "#fda4af";
+                  fill = "var(--status-cancelled)";
+                  stroke = "var(--status-cancelled)";
                 } else if (status === "bucketlist") {
-                  fill = "#a855f7";
-                  stroke = "#d8b4fe";
+                  fill = "var(--status-bucketlist)";
+                  stroke = "var(--status-bucketlist)";
                 }
 
                 return (
@@ -92,32 +92,32 @@ export const FeedCard = forwardRef<HTMLDivElement, FeedCardProps>(
 
           {/* Stats Column */}
           <div className="flex-1 space-y-2.5">
-            <div className="p-3 rounded-2xl bg-zinc-900/90 border border-emerald-500/30">
-              <div className="text-xs text-zinc-400 flex items-center justify-between">
+            <div className="p-3 rounded-sm bg-secondary border border-border">
+              <div className="text-xs text-muted-foreground flex items-center justify-between">
                 <span>{t.stats.visitedDistricts}</span>
-                <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                <span className="w-2 h-2 rounded-full bg-primary" />
               </div>
-              <div className="text-2xl font-black text-emerald-400 font-mono mt-0.5">
-                {stats.visitedCount} <span className="text-xs text-zinc-500">/ 64</span>
+              <div className="text-2xl font-black text-primary font-mono mt-0.5">
+                {stats.visitedCount} <span className="text-xs text-muted-foreground">/ 64 {t.common.districtsCount}</span>
               </div>
             </div>
 
-            <div className="p-3 rounded-2xl bg-zinc-900/90 border border-rose-500/30">
-              <div className="text-xs text-zinc-400 flex items-center justify-between">
+            <div className="p-3 rounded-sm bg-secondary border border-border">
+              <div className="text-xs text-muted-foreground flex items-center justify-between">
                 <span>{t.stats.cancelledDistricts}</span>
-                <span className="w-2 h-2 rounded-full bg-rose-500" />
+                <span className="w-2 h-2 rounded-full bg-muted-foreground" />
               </div>
-              <div className="text-2xl font-black text-rose-400 font-mono mt-0.5">
+              <div className="text-2xl font-black text-card-foreground font-mono mt-0.5">
                 {stats.cancelledCount}
               </div>
             </div>
 
-            <div className="p-3 rounded-2xl bg-zinc-900/90 border border-rose-500/50">
-              <div className="text-xs text-zinc-400 flex items-center justify-between">
+            <div className="p-3 rounded-sm bg-secondary border border-border">
+              <div className="text-xs text-muted-foreground flex items-center justify-between">
                 <span>{t.stats.cancelRate}</span>
-                <Sparkles className="w-3.5 h-3.5 text-rose-400" />
+                <SparklesIconComp size={14} className="text-primary" />
               </div>
-              <div className="text-2xl font-black text-rose-400 font-mono mt-0.5">
+              <div className="text-2xl font-black text-primary font-mono mt-0.5">
                 {stats.cancellationRate}%
               </div>
             </div>
@@ -125,12 +125,12 @@ export const FeedCard = forwardRef<HTMLDivElement, FeedCardProps>(
         </div>
 
         {/* Footer */}
-        <div className="pt-3 border-t border-zinc-800 flex items-center justify-between text-xs text-zinc-400 z-10">
+        <div className="pt-3 border-t border-border flex items-center justify-between text-xs text-muted-foreground z-10">
           <div className="flex items-center gap-1.5">
-            <MapPin className="w-4 h-4 text-emerald-400" />
+            <MapPinIcon size={16} className="text-primary" />
             <span className="italic">{t.shareModal.funQuote}</span>
           </div>
-          <span className="font-mono text-zinc-500 text-[11px]">
+          <span className="font-mono text-muted-foreground text-[11px]">
             canceltour.app
           </span>
         </div>

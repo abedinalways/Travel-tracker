@@ -1,11 +1,17 @@
 export type TripStatus = "visited" | "planned" | "cancelled" | "bucketlist" | "never";
 
+// Distinguishes Bangladesh districts (counted against the 64-district total)
+// from world countries (which must NOT reduce the "never planned" district
+// count). Falls back to inferring from divisionEn === "World" for older data.
+export type GeoType = "district" | "country";
+
 export interface TravelMemory {
   districtId: string;
   districtNameEn: string;
   districtNameBn: string;
   divisionEn: string;
   divisionBn: string;
+  geoType?: GeoType;
   status: TripStatus;
   cancelReason?: string;
   cancelReasonCustom?: string;

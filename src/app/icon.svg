@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <linearGradient id="plane" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+  </defs>
+  <!-- Rounded squircle badge -->
+  <rect width="64" height="64" rx="16" fill="#09090b" stroke="#10b981" stroke-width="2"/>
+  
+  <!-- Compass / U-Turn track -->
+  <path d="M 18 46 C 18 22, 48 20, 48 35 C 48 45, 32 45, 32 37" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-dasharray="3 2"/>
+  
+  <!-- U-turning plane -->
+  <g transform="translate(32, 37) rotate(-135) scale(0.65)">
+    <path d="M 0 -16 L 10 12 L 0 6 L -10 12 Z" fill="url(#plane)"/>
+  </g>
+  
+  <!-- Red Bed/Pin start point -->
+  <circle cx="18" cy="46" r="4" fill="#f43f5e"/>
+  <circle cx="18" cy="46" r="6" stroke="#f43f5e" stroke-width="1.5" fill="none" opacity="0.6"/>
+</svg>
