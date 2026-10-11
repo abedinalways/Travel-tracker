@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
-import { AlertTriangle } from "lucide-react";
+import { WarningIcon } from "@/components/ui/icons";
 
 interface ConfirmDialogProps {
   isOpen: boolean;
@@ -37,7 +37,7 @@ export function ConfirmDialog({
       >
         <div className="flex items-center gap-3">
           <div className="p-2.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 shrink-0">
-            <AlertTriangle className="w-5 h-5 text-rose-400" />
+            <WarningIcon size={20} className="text-rose-400" />
           </div>
           <h3 className="text-base sm:text-lg font-bold text-white leading-tight">
             {title}

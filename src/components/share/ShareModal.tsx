@@ -8,7 +8,13 @@ import { exportElementAsPng } from "@/lib/exportImage";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useToast } from "@/components/ui/Toast";
 import { useModalBehavior } from "@/hooks/useModalBehavior";
-import { X, Download, Loader2, Sparkles, User } from "lucide-react";
+import {
+  CloseIcon,
+  DownloadIcon,
+  SpinnerIcon,
+  SparklesIconComp,
+  UserIconComp,
+} from "@/components/ui/icons";
 
 interface ShareModalProps {
   isOpen: boolean;
@@ -73,7 +79,7 @@ export function ShareModal({
         <div className="flex items-center justify-between pb-3 border-b border-zinc-800">
           <div>
             <h3 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-emerald-400" />
+              <SparklesIconComp size={20} className="text-emerald-400" />
               <span>{t.shareModal.title}</span>
             </h3>
             <p className="text-xs text-zinc-400 mt-0.5">
@@ -85,7 +91,7 @@ export function ShareModal({
             onClick={onClose}
             className="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
           >
-            <X className="w-5 h-5" />
+            <CloseIcon size={18} />
           </button>
         </div>
 
@@ -93,7 +99,7 @@ export function ShareModal({
         <div className="py-3 flex flex-col sm:flex-row items-center justify-between gap-3 border-b border-zinc-800/80">
           {/* Nickname Input */}
           <div className="relative w-full sm:w-64">
-            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+            <UserIconComp size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
             <input
               type="text"
               value={nickname}
@@ -168,12 +174,12 @@ export function ShareModal({
           >
             {isExporting ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <SpinnerIcon size={16} className="animate-spin" />
                 <span>{t.shareModal.downloading}</span>
               </>
             ) : (
               <>
-                <Download className="w-4 h-4" />
+                <DownloadIcon size={16} />
                 <span>{t.shareModal.downloadBtn}</span>
               </>
             )}

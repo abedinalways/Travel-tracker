@@ -36,41 +36,41 @@ const DistrictPath = memo(function DistrictPath({
   onHover: (e: React.MouseEvent) => void;
   onLeave: () => void;
 }) {
-  let fillClass = "fill-zinc-800/90";
-  let strokeClass = "stroke-zinc-700/60";
+  let fillClass = "fill-[#141826]";
+  let strokeClass = "stroke-[#252e47]";
   let strokeWidth = "1";
 
   if (isSelected) {
-    fillClass = "fill-white";
-    strokeClass = "stroke-emerald-400";
+    fillClass = "fill-emerald-300";
+    strokeClass = "stroke-white";
     strokeWidth = "2.5";
   } else {
     switch (status) {
       case "visited":
-        fillClass = isHovered ? "fill-emerald-400" : "fill-emerald-500/80";
-        strokeClass = isHovered ? "stroke-emerald-200" : "stroke-emerald-400/50";
-        strokeWidth = isHovered ? "2" : "1.2";
+        fillClass = isHovered ? "fill-emerald-400" : "fill-emerald-500/90";
+        strokeClass = isHovered ? "stroke-emerald-200" : "stroke-emerald-400/60";
+        strokeWidth = isHovered ? "2.2" : "1.2";
         break;
       case "planned":
-        fillClass = isHovered ? "fill-amber-400" : "fill-amber-500/80";
-        strokeClass = isHovered ? "stroke-amber-200" : "stroke-amber-400/50";
-        strokeWidth = isHovered ? "2" : "1.2";
+        fillClass = isHovered ? "fill-amber-400" : "fill-amber-500/90";
+        strokeClass = isHovered ? "stroke-amber-200" : "stroke-amber-400/60";
+        strokeWidth = isHovered ? "2.2" : "1.2";
         break;
       case "cancelled":
-        fillClass = isHovered ? "fill-rose-400" : "fill-rose-500/80";
-        strokeClass = isHovered ? "stroke-rose-200" : "stroke-rose-400/50";
-        strokeWidth = isHovered ? "2" : "1.2";
+        fillClass = isHovered ? "fill-rose-400" : "fill-rose-500/90";
+        strokeClass = isHovered ? "stroke-rose-200" : "stroke-rose-400/60";
+        strokeWidth = isHovered ? "2.2" : "1.2";
         break;
       case "bucketlist":
-        fillClass = isHovered ? "fill-purple-400" : "fill-purple-500/80";
-        strokeClass = isHovered ? "stroke-purple-200" : "stroke-purple-400/50";
-        strokeWidth = isHovered ? "2" : "1.2";
+        fillClass = isHovered ? "fill-purple-400" : "fill-purple-500/90";
+        strokeClass = isHovered ? "stroke-purple-200" : "stroke-purple-400/60";
+        strokeWidth = isHovered ? "2.2" : "1.2";
         break;
       case "never":
       default:
-        fillClass = isHovered ? "fill-zinc-600" : "fill-zinc-800/85";
-        strokeClass = isHovered ? "stroke-zinc-400" : "stroke-zinc-700/60";
-        strokeWidth = isHovered ? "1.8" : "1";
+        fillClass = isHovered ? "fill-[#242b42]" : "fill-[#131726]";
+        strokeClass = isHovered ? "stroke-emerald-500/50" : "stroke-[#222a42]";
+        strokeWidth = isHovered ? "2" : "1";
         break;
     }
   }
@@ -89,12 +89,12 @@ const DistrictPath = memo(function DistrictPath({
           onSelect();
         }
       }}
-      className="cursor-pointer transition-colors duration-150 focus:outline-none focus-visible:stroke-emerald-400"
+      className="cursor-pointer transition-all duration-150 focus:outline-none focus-visible:stroke-emerald-400"
       style={{ opacity }}
     >
       <path
         d={district.svgPath}
-        className={`${fillClass} ${strokeClass}`}
+        className={`${fillClass} ${strokeClass} transition-colors duration-150`}
         strokeWidth={strokeWidth}
       />
       {district.center && (
@@ -103,7 +103,7 @@ const DistrictPath = memo(function DistrictPath({
           y={district.center[1]}
           textAnchor="middle"
           dominantBaseline="central"
-          className="text-[9px] font-medium fill-zinc-300 pointer-events-none select-none tracking-tight opacity-75"
+          className="text-[9px] font-semibold fill-zinc-200/90 pointer-events-none select-none tracking-tight drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]"
         >
           {language === "bn" ? district.nameBn : district.nameEn}
         </text>

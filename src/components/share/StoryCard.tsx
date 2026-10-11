@@ -5,7 +5,7 @@ import { TripStats, TravelMemory } from "@/types/trip";
 import { BANGLADESH_DISTRICTS } from "@/config/bangladeshDistricts";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { Logo } from "@/components/layout/Logo";
-import { Sparkles, MapPin } from "lucide-react";
+import { SparklesIconComp, MapPinIcon } from "@/components/ui/icons";
 
 interface StoryCardProps {
   stats: TripStats;
@@ -24,7 +24,7 @@ export const StoryCard = forwardRef<HTMLDivElement, StoryCardProps>(
     return (
       <div
         ref={ref}
-        className="w-[405px] h-[720px] bg-[#09090b] text-white p-7 flex flex-col justify-between relative overflow-hidden select-none border border-zinc-800 rounded-3xl shadow-2xl"
+        className="w-[405px] h-[720px] bg-[#09090b] text-white p-7 flex flex-col justify-between relative overflow-hidden select-none border border-zinc-800 rounded-3xl shadow-2xl font-sans"
         style={{
           backgroundImage:
             "radial-gradient(circle at 10% 10%, rgba(16, 185, 129, 0.18), transparent 45%), radial-gradient(circle at 90% 90%, rgba(244, 63, 94, 0.15), transparent 50%), radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.08), transparent 60%)",
@@ -139,7 +139,7 @@ export const StoryCard = forwardRef<HTMLDivElement, StoryCardProps>(
           {/* Cancellation Rate */}
           <div className="p-3 rounded-2xl bg-zinc-900/90 border border-rose-500/40">
             <div className="text-[11px] text-zinc-400 flex items-center gap-1.5 font-medium">
-              <Sparkles className="w-3 h-3 text-rose-400" />
+              <SparklesIconComp size={13} className="text-rose-400" />
               <span>{t.stats.cancelRate}</span>
             </div>
             <div className="text-xl font-black text-rose-400 mt-1 font-mono">
@@ -151,7 +151,7 @@ export const StoryCard = forwardRef<HTMLDivElement, StoryCardProps>(
         {/* Footer */}
         <div className="pt-3 border-t border-zinc-800/80 flex items-center justify-between text-[11px] text-zinc-400 z-10">
           <div className="flex items-center gap-1.5">
-            <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+            <MapPinIcon size={14} className="text-emerald-400" />
             <span className="italic">{t.shareModal.funQuote}</span>
           </div>
           <span className="font-mono text-zinc-500 text-[10px]">

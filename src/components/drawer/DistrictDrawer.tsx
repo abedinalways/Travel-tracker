@@ -7,11 +7,18 @@ import { useLanguage } from "@/i18n/LanguageContext";
 import { CancelledForm } from "./CancelledForm";
 import { VisitedForm } from "./VisitedForm";
 import confetti from "canvas-confetti";
-import { X, Check, Trash2, MapPin, Globe2 } from "lucide-react";
+import {
+  CloseIcon,
+  CheckIcon,
+  DeleteIcon,
+  MapPinIcon,
+  GlobeIcon,
+} from "@/components/ui/icons";
 import { useModalBehavior } from "@/hooks/useModalBehavior";
 import { RegionMiniMap } from "@/components/maps/RegionMiniMap";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { useToast } from "@/components/ui/Toast";
+import { getDistrictRoast } from "@/config/districtRoasts";
 
 interface DistrictDrawerProps {
   isOpen: boolean;
@@ -232,27 +239,31 @@ function DistrictDrawerContent({
     },
   ];
 
+  const districtRoast = getDistrictRoast(item.id);
+
   return (
-    <div className="relative w-full max-w-lg bg-[#0e0e12] border border-zinc-800 rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
+    <div className="relative w-full max-w-lg bg-[#0e1220] border border-zinc-700/60 rounded-t-3xl sm:rounded-3xl p-5 sm:p-6 shadow-[0_25px_60px_rgba(0,0,0,0.85)] max-h-[90vh] overflow-y-auto">
       {/* Header */}
-      <div className="flex items-start justify-between pb-4 border-b border-zinc-800">
+      <div className="flex items-start justify-between pb-4 border-b border-zinc-800/80">
         <div>
           <div className="flex items-center gap-2">
-            <MapPin className="w-5 h-5 text-emerald-400" />
-            <h2 className="text-xl sm:text-2xl font-bold text-white">
+            <div className="w-8 h-8 rounded-xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center">
+              <MapPinIcon size={18} className="text-emerald-400" />
+            </div>
+            <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
               {language === "bn" ? item.nameBn : item.nameEn}
             </h2>
           </div>
-          <p className="text-xs sm:text-sm text-zinc-400 mt-0.5">
+          <p className="text-xs sm:text-sm text-zinc-400 mt-1 pl-10 font-medium">
             {language === "bn" ? `${divisionBn} বিভাগ` : `${divisionEn} Division`}
           </p>
         </div>
         <button
           type="button"
           onClick={onClose}
-          className="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
+          className="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800/80 border border-transparent hover:border-zinc-700 transition-all cursor-pointer"
         >
-          <X className="w-5 h-5" />
+          <CloseIcon size={18} />
         </button>
       </div>
 
@@ -260,9 +271,9 @@ function DistrictDrawerContent({
       <div className="pt-4 space-y-3">
         <div className="flex items-center gap-2 text-xs font-semibold text-zinc-400 uppercase tracking-wide">
           {isDistrict ? (
-            <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+            <MapPinIcon size={15} className="text-emerald-400" />
           ) : (
-            <Globe2 className="w-3.5 h-3.5 text-sky-400" />
+            <GlobeIcon size={15} className="text-sky-400" />
           )}
           <span>{t.drawer.quickFacts}</span>
         </div>
@@ -297,6 +308,24 @@ function DistrictDrawerContent({
             </div>
           </div>
         </div>
+
+        {/* Hilarious District Roast Pill */}
+        {isDistrict && (
+          <div className="p-3 sm:p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-start gap-2.5 shadow-sm">
+            <span className="text-xl shrink-0 mt-0.5">😂</span>
+            <div>
+              <div className="text-[11px] font-bold text-amber-400 uppercase tracking-wider">
+                {language === "bn" ? "খাঁটি বাস্তবতা ও রোস্ট" : "Local Truth & Roast"}
+              </div>
+              <p className="text-xs text-amber-200/90 leading-relaxed italic mt-0.5">
+                &ldquo;{language === "bn" ? districtRoast.roastBn : districtRoast.roastEn}&rdquo;
+              </p>
+              <div className="text-[10px] text-zinc-400 mt-1 font-mono">
+                {language === "bn" ? "বিখ্যাত:" : "Famous:"} {language === "bn" ? districtRoast.famousItemBn : districtRoast.famousItemEn}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* 5 Dynamic Status Cards */}
@@ -377,7 +406,7 @@ function DistrictDrawerContent({
             onClick={handleDelete}
             className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
           >
-            <Trash2 className="w-4 h-4" />
+            <DeleteIcon size={16} />
             <span>{t.drawer.resetStatus}</span>
           </button>
         ) : (
@@ -398,7 +427,7 @@ function DistrictDrawerContent({
             disabled={isSaving}
             className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-emerald-500 text-zinc-950 hover:bg-emerald-400 transition-all duration-200 shadow-[0_0_20px_rgba(16,185,129,0.4)] cursor-pointer disabled:opacity-50"
           >
-            <Check className="w-4 h-4" />
+            <CheckIcon size={16} />
             <span>{t.drawer.saveChanges}</span>
           </button>
         </div>

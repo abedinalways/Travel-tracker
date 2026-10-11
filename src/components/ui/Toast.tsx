@@ -7,7 +7,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { CheckCircle2, AlertCircle, X } from "lucide-react";
+import { CheckIcon, WarningIcon, CloseIcon } from "@/components/ui/icons";
 
 type ToastType = "success" | "error";
 
@@ -59,9 +59,9 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             }`}
           >
             {toast.type === "success" ? (
-              <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
+              <CheckIcon size={16} className="shrink-0 text-emerald-400" />
             ) : (
-              <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+              <WarningIcon size={16} className="shrink-0 text-rose-400" />
             )}
             <span>{toast.message}</span>
             <button
@@ -70,7 +70,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
               className="ml-1 p-0.5 rounded-md hover:bg-white/10 transition-colors cursor-pointer"
               aria-label="Dismiss"
             >
-              <X className="w-3.5 h-3.5" />
+              <CloseIcon size={14} />
             </button>
           </div>
         ))}

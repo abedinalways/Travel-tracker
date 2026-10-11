@@ -5,7 +5,13 @@ import { useLanguage } from "@/i18n/LanguageContext";
 import { useModalBehavior } from "@/hooks/useModalBehavior";
 import { useToast } from "@/components/ui/Toast";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
-import { Download, Upload, Trash2, X, Database } from "lucide-react";
+import {
+  DownloadIcon,
+  UploadIcon,
+  DeleteIcon,
+  CloseIcon,
+  DatabaseIconComp,
+} from "@/components/ui/icons";
 
 interface BackupRestoreModalProps {
   isOpen: boolean;
@@ -89,7 +95,7 @@ export function BackupRestoreModal({
         <div className="flex items-center justify-between pb-3 border-b border-zinc-800">
           <div className="flex items-center gap-2.5">
             <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400">
-              <Database className="w-5 h-5" />
+              <DatabaseIconComp size={20} />
             </div>
             <div>
               <h3 className="text-base sm:text-lg font-bold text-white">
@@ -102,7 +108,7 @@ export function BackupRestoreModal({
             onClick={onClose}
             className="p-1.5 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
           >
-            <X className="w-5 h-5" />
+            <CloseIcon size={18} />
           </button>
         </div>
 
@@ -119,7 +125,7 @@ export function BackupRestoreModal({
             className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-zinc-900 border border-zinc-700/80 hover:border-emerald-500/50 hover:bg-zinc-800 transition-all text-left cursor-pointer group"
           >
             <div className="flex items-center gap-3">
-              <Download className="w-5 h-5 text-emerald-400 group-hover:scale-110 transition-transform" />
+              <DownloadIcon size={20} className="text-emerald-400 group-hover:scale-110 transition-transform" />
               <div>
                 <div className="text-xs sm:text-sm font-semibold text-zinc-100">
                   {t.backupModal.exportBtn}
@@ -134,7 +140,7 @@ export function BackupRestoreModal({
           {/* Upload JSON */}
           <label className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-zinc-900 border border-zinc-700/80 hover:border-sky-500/50 hover:bg-zinc-800 transition-all text-left cursor-pointer group">
             <div className="flex items-center gap-3">
-              <Upload className="w-5 h-5 text-sky-400 group-hover:scale-110 transition-transform" />
+              <UploadIcon size={20} className="text-sky-400 group-hover:scale-110 transition-transform" />
               <div>
                 <div className="text-xs sm:text-sm font-semibold text-zinc-100">
                   {t.backupModal.importBtn}
@@ -160,7 +166,7 @@ export function BackupRestoreModal({
             onClick={() => setShowResetConfirm(true)}
             className="w-full flex items-center justify-center gap-2 p-3 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-400 hover:bg-rose-500/20 transition-all text-xs font-semibold cursor-pointer"
           >
-            <Trash2 className="w-4 h-4" />
+            <DeleteIcon size={16} />
             <span>{t.backupModal.dangerZone}</span>
           </button>
         </div>
