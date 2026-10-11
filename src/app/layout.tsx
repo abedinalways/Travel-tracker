@@ -32,7 +32,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#09090b",
+  themeColor: "black",
   colorScheme: "dark",
   width: "device-width",
   initialScale: 1,
@@ -49,7 +49,7 @@ export default function RootLayout({
       className={`dark ${inter.variable} h-full antialiased font-sans`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-[#09090b] text-zinc-100 selection:bg-emerald-500/30 selection:text-emerald-300">
+      <body className="min-h-full flex flex-col bg-background text-foreground selection:bg-primary/30 selection:text-primary">
         <LanguageProvider>
           <ToastProvider>
             {children}

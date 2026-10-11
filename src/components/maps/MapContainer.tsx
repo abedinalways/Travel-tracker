@@ -124,40 +124,40 @@ export function MapContainer({
         {/* View Switcher Tabs & Mode Switch */}
         <div className="flex flex-wrap items-center gap-2">
           {/* BD vs World */}
-          <div className="flex items-center p-1 rounded-2xl glass-card border border-zinc-800">
+          <div className="flex items-center p-0.5 rounded-lg glass-card border border-zinc-800">
             <button
               type="button"
               onClick={() => setViewMode("bangladesh")}
-              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer ${
                 viewMode === "bangladesh"
-                  ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shadow-md"
+                  ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shadow-sm"
                   : "text-zinc-400 hover:text-white"
               }`}
             >
-              <MapPinIcon size={16} className="text-emerald-400" />
+              <MapPinIcon size={15} className="text-emerald-400" />
               <span>{t.nav.bangladesh}</span>
             </button>
             <button
               type="button"
               onClick={() => setViewMode("world")}
-              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer ${
                 viewMode === "world"
-                  ? "bg-sky-500/20 text-sky-400 border border-sky-500/30 shadow-md"
-                  : "text-zinc-400 hover:text-white"
+                  ? "bg-primary text-primary-foreground font-bold shadow-sm"
+                  : "text-muted-foreground hover:text-card-foreground"
               }`}
             >
-              <GlobeIcon size={16} className="text-sky-400" />
+              <GlobeIcon size={15} className={viewMode === "world" ? "text-primary-foreground" : "text-primary"} />
               <span>{t.nav.world}</span>
             </button>
           </div>
 
           {/* Map vs Grid Toggle (Only for BD) */}
           {viewMode === "bangladesh" && (
-            <div className="flex items-center p-1 rounded-2xl glass-card border border-zinc-800 text-xs">
+            <div className="flex items-center p-0.5 rounded-lg glass-card border border-zinc-800 text-xs">
               <button
                 type="button"
                 onClick={() => setDisplayMode("map")}
-                className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer ${
+                className={`px-2.5 py-1.5 rounded-md font-bold transition-all cursor-pointer ${
                   displayMode === "map"
                     ? "bg-zinc-800 text-white shadow-sm border border-zinc-700"
                     : "text-zinc-400 hover:text-white"
@@ -168,7 +168,7 @@ export function MapContainer({
               <button
                 type="button"
                 onClick={() => setDisplayMode("grid")}
-                className={`px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer ${
+                className={`px-2.5 py-1.5 rounded-md font-bold transition-all cursor-pointer ${
                   displayMode === "grid"
                     ? "bg-emerald-500/20 text-emerald-300 shadow-sm border border-emerald-500/30"
                     : "text-zinc-400 hover:text-white"
@@ -184,18 +184,18 @@ export function MapContainer({
         <div className="flex items-center gap-2 w-full md:w-auto">
           {viewMode === "bangladesh" && (
             <div className="relative flex-1 md:w-64">
-              <SearchIcon size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
+              <SearchIcon size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={language === "bn" ? "কোথায় ড্রপ দেবেন? যেমন: সাজেক..." : t.common.searchPlaceholder}
-                className="w-full pl-9 pr-3 py-2 rounded-xl bg-zinc-900/70 border border-zinc-800 text-xs sm:text-sm text-zinc-200 placeholder:text-zinc-500 focus:outline-none focus:border-emerald-500/50 transition-colors"
+                className="w-full pl-9 pr-3 py-1.5 rounded-md bg-zinc-900/70 border border-zinc-800 text-xs sm:text-sm text-zinc-200 placeholder:text-zinc-500 focus:outline-none focus:border-emerald-500/50 transition-colors"
               />
 
               {/* Autocomplete Dropdown */}
               {searchResults.length > 0 && (
-                <div className="absolute top-full left-0 right-0 mt-1 py-1 rounded-xl glass-dropdown border border-zinc-800 z-50 shadow-2xl max-h-60 overflow-y-auto">
+                <div className="absolute top-full left-0 right-0 mt-1 py-1 rounded-md glass-dropdown border border-zinc-800 z-50 shadow-2xl max-h-60 overflow-y-auto">
                   {searchResults.map((d) => (
                     <button
                       key={d.id}
@@ -221,12 +221,12 @@ export function MapContainer({
 
           {/* Zoom Actions (Only on Map view) */}
           {displayMode === "map" && (
-            <div className="flex items-center gap-1 p-1 rounded-xl glass-card border border-zinc-800">
+            <div className="flex items-center gap-1 p-1 rounded-md glass-card border border-zinc-800">
               <button
                 type="button"
                 onClick={handleZoomIn}
                 title="Zoom In"
-                className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
+                className="p-1.5 rounded-sm text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
               >
                 <ZoomInIcon size={16} />
               </button>
@@ -234,7 +234,7 @@ export function MapContainer({
                 type="button"
                 onClick={handleZoomOut}
                 title="Zoom Out"
-                className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
+                className="p-1.5 rounded-sm text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
               >
                 <ZoomOutIcon size={16} />
               </button>
@@ -242,7 +242,7 @@ export function MapContainer({
                 type="button"
                 onClick={handleResetZoom}
                 title="Reset Zoom"
-                className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
+                className="p-1.5 rounded-sm text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
               >
                 <ResetIcon size={15} />
               </button>
@@ -254,7 +254,7 @@ export function MapContainer({
       {/* Viral Hotspots Bar (BD View) */}
       {viewMode === "bangladesh" && (
         <div className="w-full flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none mb-2 text-xs">
-          <span className="shrink-0 text-amber-400 font-bold flex items-center gap-1 text-[11px] pr-1">
+          <span className="shrink-0 text-primary font-bold flex items-center gap-1 text-[11px] pr-1">
             🔥 {language === "bn" ? "ভাইরাল স্পট:" : "Hotspots:"}
           </span>
           {VIRAL_HOTSPOTS.map((spot) => (
@@ -262,7 +262,7 @@ export function MapContainer({
               key={spot.id}
               type="button"
               onClick={() => handleHotspotClick(spot.id)}
-              className="px-2.5 py-1 rounded-full bg-amber-500/10 hover:bg-amber-500/20 text-amber-200 border border-amber-500/25 shrink-0 transition-all cursor-pointer font-medium text-[11px] hover:scale-105 active:scale-95"
+              className="px-2.5 py-1 rounded-sm bg-secondary hover:border-primary/50 text-card-foreground border border-border shrink-0 transition-all cursor-pointer font-medium text-[11px] hover:scale-105 active:scale-95"
             >
               {language === "bn" ? spot.labelBn : spot.labelEn}
             </button>
@@ -276,7 +276,7 @@ export function MapContainer({
           <button
             type="button"
             onClick={() => setSelectedDivision(null)}
-            className={`px-3 py-1 rounded-xl text-xs font-bold shrink-0 transition-all cursor-pointer ${
+            className={`px-3 py-1 rounded-md text-xs font-bold shrink-0 transition-all cursor-pointer ${
               selectedDivision === null
                 ? "bg-zinc-800 text-white border border-zinc-700 shadow-sm"
                 : "bg-zinc-900/60 text-zinc-400 hover:text-zinc-200"
@@ -291,7 +291,7 @@ export function MapContainer({
               onClick={() =>
                 setSelectedDivision(selectedDivision === div.en ? null : div.en)
               }
-              className={`px-3 py-1 rounded-xl text-xs font-semibold shrink-0 transition-all cursor-pointer ${
+              className={`px-3 py-1 rounded-md text-xs font-semibold shrink-0 transition-all cursor-pointer ${
                 selectedDivision === div.en
                   ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm"
                   : "bg-zinc-900/60 text-zinc-400 hover:text-zinc-200"
@@ -305,7 +305,7 @@ export function MapContainer({
 
       {/* Main Container: Map or District Grid */}
       {displayMode === "map" || viewMode === "world" ? (
-        <div className="relative w-full rounded-3xl glass-panel p-3 sm:p-6 overflow-hidden flex items-center justify-center min-h-[500px] border border-zinc-800/80 shadow-2xl">
+        <div className="relative w-full rounded-xl glass-panel p-3 sm:p-5 overflow-hidden flex items-center justify-center min-h-[500px] border border-zinc-800/80 shadow-xl">
           <div
             className="w-full flex items-center justify-center transition-transform duration-300"
             style={{ transform: `scale(${zoomLevel})` }}
@@ -329,11 +329,11 @@ export function MapContainer({
         </div>
       ) : (
         /* District Grid View: Playful & Super User-Friendly */
-        <div className="w-full rounded-3xl glass-panel p-4 sm:p-6 border border-zinc-800/80 shadow-2xl">
+        <div className="w-full rounded-xl glass-panel p-3.5 sm:p-5 border border-zinc-800/80 shadow-xl">
           <div className="flex items-center justify-between mb-4">
             <div className="text-xs sm:text-sm font-bold text-zinc-300 flex items-center gap-2">
               <span>📋 {language === "bn" ? "জেলার তালিকা" : "Districts Ledger"}</span>
-              <span className="px-2 py-0.5 rounded-full bg-zinc-800 text-[11px] font-mono text-zinc-400">
+              <span className="px-2 py-0.5 rounded-md bg-zinc-800 text-[11px] font-mono text-zinc-400">
                 {gridDistricts.length} {t.common.districtsCount}
               </span>
             </div>
@@ -348,20 +348,20 @@ export function MapContainer({
               const status = memory?.status || "never";
               const roast = getDistrictRoast(d.id);
 
-              let badgeBg = "bg-zinc-800 text-zinc-400 border-zinc-700";
-              let cardBorder = "border-zinc-800 hover:border-zinc-600";
+              let badgeBg = "bg-secondary text-muted-foreground border-border";
+              let cardBorder = "border-border hover:border-primary/50 bg-card";
               if (status === "visited") {
-                badgeBg = "bg-emerald-500/20 text-emerald-300 border-emerald-500/40";
-                cardBorder = "border-emerald-500/40 bg-emerald-950/10 hover:border-emerald-400";
+                badgeBg = "bg-secondary text-primary border-primary/40";
+                cardBorder = "border-primary/50 bg-card hover:border-primary";
               } else if (status === "planned") {
-                badgeBg = "bg-amber-500/20 text-amber-300 border-amber-500/40";
-                cardBorder = "border-amber-500/40 bg-amber-950/10 hover:border-amber-400";
+                badgeBg = "bg-secondary text-primary border-border";
+                cardBorder = "border-border bg-card hover:border-primary/50";
               } else if (status === "cancelled") {
-                badgeBg = "bg-rose-500/20 text-rose-300 border-rose-500/40";
-                cardBorder = "border-rose-500/40 bg-rose-950/10 hover:border-rose-400";
+                badgeBg = "bg-secondary text-muted-foreground border-border";
+                cardBorder = "border-border bg-card hover:border-primary/50";
               } else if (status === "bucketlist") {
-                badgeBg = "bg-purple-500/20 text-purple-300 border-purple-500/40";
-                cardBorder = "border-purple-500/40 bg-purple-950/10 hover:border-purple-400";
+                badgeBg = "bg-secondary text-primary border-border";
+                cardBorder = "border-border bg-card hover:border-primary/50";
               }
 
               return (
@@ -369,7 +369,7 @@ export function MapContainer({
                   key={d.id}
                   type="button"
                   onClick={() => onSelectDistrict(d)}
-                  className={`p-3.5 rounded-2xl glass-card-interactive border text-left flex flex-col justify-between transition-all cursor-pointer group ${cardBorder}`}
+                  className={`p-3 rounded-lg glass-card-interactive border text-left flex flex-col justify-between transition-all cursor-pointer group ${cardBorder}`}
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div>
@@ -380,7 +380,7 @@ export function MapContainer({
                         {language === "bn" ? d.divisionBn : d.divisionEn} বিভাগ
                       </div>
                     </div>
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border shrink-0 ${badgeBg}`}>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md border shrink-0 ${badgeBg}`}>
                       {t.status[status]}
                     </span>
                   </div>

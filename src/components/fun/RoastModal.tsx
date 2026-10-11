@@ -48,42 +48,42 @@ export function RoastModal({ isOpen, onClose, stats, nickname }: RoastModalProps
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-lg bg-gradient-to-b from-[#181820] to-[#0d0d12] border-2 border-rose-500/40 rounded-3xl p-6 sm:p-7 shadow-[0_0_40px_rgba(244,63,94,0.25)] text-white"
+        className="relative w-full max-w-lg bg-card border border-border rounded-xl p-6 sm:p-7 shadow-2xl text-card-foreground"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Floating fun pill */}
-        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-rose-500 text-zinc-950 font-black text-xs uppercase tracking-wider shadow-lg flex items-center gap-1.5">
+        <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-sm bg-primary text-primary-foreground font-black text-xs uppercase tracking-wider shadow-sm flex items-center gap-1.5">
           <span>💀 Brutal Roast Mode</span>
         </div>
 
         {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-zinc-800 mt-1">
+        <div className="flex items-center justify-between pb-4 border-b border-border mt-1">
           <div>
-            <h3 className="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+            <h3 className="text-xl sm:text-2xl font-black text-card-foreground flex items-center gap-2">
               <span>{currentRoast.title}</span>
             </h3>
-            <p className="text-xs text-zinc-400 mt-0.5">
+            <p className="text-xs text-muted-foreground mt-0.5">
               @{displayName} • {stats.visitedCount}Visited vs {stats.cancelledCount}Dropped
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
+            className="p-2 rounded-sm text-muted-foreground hover:text-card-foreground hover:bg-secondary transition-colors cursor-pointer"
           >
             <CloseIcon size={18} />
           </button>
         </div>
 
         {/* Roast Punchline Box */}
-        <div className="my-6 p-5 sm:p-6 rounded-2xl bg-zinc-900/90 border border-rose-500/30 text-center relative overflow-hidden group">
+        <div className="my-6 p-5 sm:p-6 rounded-sm bg-secondary border border-border text-center relative overflow-hidden group">
           <div className="text-4xl sm:text-5xl mb-3 animate-bounce">
             {currentRoast.emoji}
           </div>
-          <p className="text-sm sm:text-base font-semibold text-rose-200/95 leading-relaxed italic">
+          <p className="text-sm sm:text-base font-semibold text-card-foreground leading-relaxed italic">
             &ldquo;{currentRoast.text}&rdquo;
           </p>
-          <div className="mt-4 inline-block px-3 py-1 rounded-full bg-zinc-800/80 text-[11px] font-mono text-zinc-400 border border-zinc-700/60">
+          <div className="mt-4 inline-block px-3 py-1 rounded-sm bg-card text-[11px] font-mono text-primary border border-border">
             {currentRoast.tag}
           </div>
         </div>
@@ -93,7 +93,7 @@ export function RoastModal({ isOpen, onClose, stats, nickname }: RoastModalProps
           <button
             type="button"
             onClick={handleNextRoast}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs font-bold text-zinc-200 transition-all cursor-pointer active:scale-95"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-sm bg-secondary border border-border hover:border-primary/50 text-xs font-bold text-card-foreground transition-all cursor-pointer active:scale-95"
           >
             <ResetIcon size={16} />
             <span>{language === "bn" ? "অন্য রোস্ট শুনবো 🔄" : "Another Roast 🔄"}</span>
@@ -103,7 +103,7 @@ export function RoastModal({ isOpen, onClose, stats, nickname }: RoastModalProps
             <button
               type="button"
               onClick={handleCopy}
-              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-rose-500 to-amber-500 hover:brightness-110 text-zinc-950 text-xs font-black transition-all shadow-[0_0_15px_rgba(244,63,94,0.35)] cursor-pointer active:scale-95"
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-sm bg-primary hover:bg-primary/90 text-primary-foreground text-xs font-black transition-all shadow-sm cursor-pointer active:scale-95"
             >
               <ShareIcon size={16} />
               <span>{language === "bn" ? "রোস্ট কপি করো 📋" : "Copy Roast 📋"}</span>

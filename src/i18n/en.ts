@@ -23,7 +23,7 @@ export const en: typeof bn = {
 
   // Hero Section
   hero: {
-    title: "Your Travel & 11th-Hour Flake Ledger 🇧🇩",
+    title: "Plan vs Reality: The 64-District Chronicle 🗺️",
     subtitle:
       "All 64 districts of Bangladesh and the whole world — where you actually left footprints, where you only watched reels, and where your friends flaked on you! All on one interactive map.",
     ctaShare: "Viral Story Card 🔥",
